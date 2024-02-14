@@ -514,7 +514,14 @@ def process_wikitext(conn, file_meta, file_ctimes, page_ctimes, filename, num):
             text += f"{sec}\n"
 
     # convert the remaining wikitext to markdown
-    mrec['text'] = pypandoc.convert_text(text, 'md', format='mediawiki')
+    readme = pypandoc.convert_text(text, 'md', format='mediawiki')
+
+    # remove spurious HTML comments
+    readme = readme.replace("""```{=html}
+<!-- -->
+```""", '')
+
+    mrec['text'] = readme
 
     # convert game image url to game image name
     if imgname := mrec.get('game_image'):
