@@ -36,7 +36,7 @@ def run():
     
         
     with open('data/users.json', 'w') as f:
-        json.dump(users, f)
+        json.dump(users, f, indent=2)
 
 
 if __name__ == '__main__':
