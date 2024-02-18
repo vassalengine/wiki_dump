@@ -730,6 +730,7 @@ def populate_users(conn, upath):
     with conn as cur:
         for u in users:
             rec = {
+                'user_id': u['id'],
                 'email': u['email'],
                 'realname': u['name'],
                 'username': u['username'],
