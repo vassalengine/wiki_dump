@@ -144,23 +144,23 @@ async def run():
         with open('data/files.json', 'w') as f:
             json.dump(file_meta, f, indent=2)
 
-#        file_ctimes = await get_ctimes(session, url, 'older', files)
-#
-#        with open('data/file_ctimes.json', 'w') as f:
-#            json.dump(file_ctimes, f, indent=2)
+        file_ctimes = await get_ctimes(session, url, 'older', files)
+
+        with open('data/file_ctimes.json', 'w') as f:
+            json.dump(file_ctimes, f, indent=2)
 
         #
         # pages
         #
 
-#        pages = await get_page_list(session, url, 100)
-#        page_ctimes = await get_ctimes(session, url, 'newer', pages)
-#
-#        with open('data/page_ctimes.json', 'w') as f:
-#            json.dump(page_ctimes, f, indent=2)
+        pages = await get_page_list(session, url, 100)
+        page_ctimes = await get_ctimes(session, url, 'newer', pages)
 
-#        os.mkdir('data/wikitext')
-#        await get_all_wikitext(session, url, pages) 
+        with open('data/page_ctimes.json', 'w') as f:
+            json.dump(page_ctimes, f, indent=2)
+
+        os.mkdir('data/wikitext')
+        await get_all_wikitext(session, url, pages)
 
 
 if __name__ == '__main__':
