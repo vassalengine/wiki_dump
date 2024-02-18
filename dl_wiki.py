@@ -48,7 +48,7 @@ async def get_ctime(session, url, title, direction, ctimes):
         'prop': 'revisions',
         'rvlimit': '1',
         'rvprop': 'timestamp',
-        'rvdir': direction 
+        'rvdir': direction
     }
 
     async with session.get(url, params=params) as response:
@@ -59,7 +59,7 @@ async def get_ctime(session, url, title, direction, ctimes):
                 print('.', end='', file=sys.stderr)
             except KeyError:
                 print(v, file=sys.stderr)
-    
+
             break
 
 
@@ -115,8 +115,8 @@ async def get_file_meta(session, url, title, file_meta):
                 }
                 print('.', end='', file=sys.stderr)
             except KeyError:
-                print(v, file=sys.stderr)            
-    
+                print(v, file=sys.stderr)
+
             break
 
 
@@ -140,7 +140,7 @@ async def run():
         #
         files = await get_page_list(session, url, 6)
         file_meta = await get_all_file_meta(session, url, files)
-    
+
         with open('data/files.json', 'w') as f:
             print(json.dumps(file_meta), file=f)
 
