@@ -142,12 +142,12 @@ async def run():
         file_meta = await get_all_file_meta(session, url, files)
 
         with open('data/files.json', 'w') as f:
-            print(json.dumps(file_meta), file=f)
+            json.dump(file_meta, f, indent=2)
 
 #        file_ctimes = await get_ctimes(session, url, 'older', files)
 #
 #        with open('data/file_ctimes.json', 'w') as f:
-#            print(json.dumps(file_ctimes), file=f)
+#            json.dump(file_ctimes, f, indent=2)
 
         #
         # pages
@@ -157,7 +157,7 @@ async def run():
 #        page_ctimes = await get_ctimes(session, url, 'newer', pages)
 #
 #        with open('data/page_ctimes.json', 'w') as f:
-#            print(json.dumps(page_ctimes), file=f)
+#            json.dump(page_ctimes, f, indent=2)
 
 #        os.mkdir('data/wikitext')
 #        await get_all_wikitext(session, url, pages) 
