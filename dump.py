@@ -1124,6 +1124,24 @@ WHERE url IS NOT NULL
         )
 
         cur.execute('''
+INSERT INTO image_revisions (
+    project_id,
+    filename,
+    url,
+    published_at,
+    published_by
+)
+SELECT
+    project_id,
+    filename,
+    url,
+    published_at,
+    published_by
+FROM images
+            '''
+        )
+
+        cur.execute('''
 UPDATE projects
 SET image = x.filename
 FROM (
