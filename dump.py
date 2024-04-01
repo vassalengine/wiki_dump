@@ -934,6 +934,7 @@ WHERE matched = 1
 INSERT INTO projects (
     project_id,
     name,
+    normalized_name,
     created_at,
     modified_at,
     modified_by,
@@ -947,6 +948,7 @@ INSERT INTO projects (
 )
 SELECT
     projects_w.project_id,
+    CAST(projects_w.project_id AS TEXT),
     CAST(projects_w.project_id AS TEXT),
     projects_w.created_at,
     projects_w.created_at,
