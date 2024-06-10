@@ -514,7 +514,7 @@ def process_wikitext(conn, file_meta, file_ctimes, page_ctimes, filename, num):
             text += f"{sec}\n"
 
     # convert the remaining wikitext to markdown
-    readme = pypandoc.convert_text(text, 'md', format='mediawiki')
+    readme = pypandoc.convert_text(text, 'commonmark', format='mediawiki')
 
     # remove spurious HTML comments
     readme = readme.replace("""```{=html}
