@@ -231,7 +231,7 @@ ginfo_re = re.compile(r'{{GameInfo\s*\|')
 cinfo_re = re.compile(r'{{ModuleContactInfo\s*\|')
 mfile_re = re.compile(r'{{ModuleFile2?\s*\|')
 text_cruft_re = re.compile(r'__NOTOC__|{{ModuleFilesTable2?}}.*?\|}|{{ModuleVersion2?\|.*?}}', re.DOTALL)
-section_re = re.compile(r'==\s*(.*?)\s*==')
+section_re = re.compile(r'(?<!=)==([^=](.*?[^=])?)==(?!=)')
 
 div_open_re = re.compile(r'<div.*?>')
 gallery_open_re = re.compile(r'<gallery.*?>')
@@ -253,7 +253,7 @@ def iterate_sections(text):
 
         # the next section starts at the end of this header
         sbeg = m.end(0)
-        sec_header = m.group(1)
+        sec_header = m.group(1).strip()
         send = sbeg
 
     # dump the trailing section
