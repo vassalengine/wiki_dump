@@ -172,7 +172,8 @@ def remove_headings(page):
         'Comments',
         'Module Information',
         'Files',
-        'Screen Shots'
+        'Screen Shots',
+        'Screenshots'
     ]
 
     headings = page.filter_headings(matches='|'.join(to_remove))
