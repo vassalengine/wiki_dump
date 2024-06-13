@@ -39,15 +39,22 @@ def parse_game_info(page):
 
 
 def parse_emails(block):
-    emails = block.filter_templates(matches=lambda n: n.name == 'email')
-    return [
-        {
-            'name': str(e.params[1]) if len(e.params) > 1 else '',
-            'address': str(e.params[0])
-        }
-        for e in emails
-        if str(e.params[0]) != 'someguy@example.com'
-    ]
+    tmpls = block.filter_templates(matches=lambda n: n.name == 'email')
+
+    emails = []
+    for e in tmpls:
+        address = str(e.params[0])
+        if address == 'someguy@example.com':
+            continue
+
+        name = str(e.params[1]) if len(e.params) > 1 else ''
+
+        if not name and not address:
+            continue
+
+        emails.append({'name': name, 'address': address})
+
+    return emails
 
 
 def parse_emails_str(s):
