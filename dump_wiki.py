@@ -104,7 +104,7 @@ def parse_modules(page):
             ]
             if tm.has(k)
         }
-        
+
         db['maintainers'] = parse_emails_str(tm.get('maintainer')) if tm.has('maintainer') else []
 
         db['contributors'] = parse_emails_str(tm.get('contributors')) if tm.has('contributors') else []
@@ -208,7 +208,7 @@ async def parse_page(inpath, outpath):
 
     wikitext = p['wikitext']['*'].strip()
 
-    # skip some pages 
+    # skip some pages
     if wikitext.startswith('#REDIRECT'):
         return
 
@@ -228,10 +228,10 @@ async def parse_page(inpath, outpath):
     players = parse_players(t)
 
     remove_cruft(t)
-    remove_headings(t) 
+    remove_headings(t)
 
     page = {
-        'title': title, 
+        'title': title,
         'info': ginfo,
         'maintainer': maintainer,
         'contributors': contributors,
