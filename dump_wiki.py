@@ -1,4 +1,5 @@
 import asyncio
+import email.utils
 import glob
 import json
 import os
@@ -38,28 +39,51 @@ def parse_game_info(page):
     return ret
 
 
-def parse_emails(block):
-    tmpls = block.filter_templates(matches=lambda n: n.name == 'email')
+def parse_email(v):
+    x = v.split('|')
 
+    x[0] = x[0].strip()
+    if not x[0]:
+        x[0] = None
+
+    if len(x) == 2:
+        x[1] = x[1].strip()
+        if not x[1]:
+            x[1] = None
+
+    elif x[0]:
+        e = list(email.utils.parseaddr(x[0]))
+        x = (e[1], None) if e[1] else (None, x[0])
+
+    x = (x[0], x[1] if len(x) == 2 else None)
+
+    if not x[0] and not x[1]:
+       return None
+
+    if x[0] == 'someguy@example.com':
+        return None
+
+    if not x[0] and x[1] == 'unknown':
+        return None
+
+    return x
+
+
+def parse_emails(v):
     emails = []
-    for e in tmpls:
-        address = str(e.params[0])
-        if address == 'someguy@example.com':
-            continue
+    for s in v.split(','):
+        s = s.strip()
 
-        name = str(e.params[1]) if len(e.params) > 1 else ''
+        if s.startswith('{{email|'):
+            s = s.removeprefix('{{email|').removesuffix('}}')
 
-        if not name and not address:
-            continue
+            if x := parse_email(s):
+                emails.append(x)
 
-        emails.append({'name': name, 'address': address})
+        elif s:
+            emails.append((None, s))
 
     return emails
-
-
-def parse_emails_str(s):
-    block = mwparserfromhell.parse(str(s))
-    return parse_emails(block)
 
 
 def parse_modules(page):
@@ -105,9 +129,9 @@ def parse_modules(page):
             if tm.has(k)
         }
 
-        db['maintainers'] = parse_emails_str(tm.get('maintainer')) if tm.has('maintainer') else []
+        db['maintainers'] = parse_emails(str(tm.get('maintainer')).replace('maintainer=', '')) if tm.has('maintainer') else []
 
-        db['contributors'] = parse_emails_str(tm.get('contributors')) if tm.has('contributors') else []
+        db['contributors'] = parse_emails(str(tm.get('contributors')).replace('contributors=', '')) if tm.has('contributors') else []
 
         cur.append(db)
 
@@ -127,8 +151,8 @@ def parse_module_contact_info(page):
     contr = []
 
     for tm in tmpl:
-        maint += parse_emails_str(tm.get('maintainer')) if tm.has('maintainer') else []
-        contr += parse_emails_str(tm.get('contributors')) if tm.has('contributors') else []
+        maint += parse_emails(str(tm.get('maintainer')).replace('maintainer=', '')) if tm.has('maintainer') else []
+        contr += parse_emails(str(tm.get('contributors')).replace('contributors=', '')) if tm.has('contributors') else []
 
     for tm in tmpl:
         page.remove(tm)
@@ -139,7 +163,27 @@ def parse_module_contact_info(page):
 def parse_players(page):
     secs = page.get_sections(matches='Players')
 
-    players = [e for sec in secs for e in parse_emails(sec)]
+    players = []
+
+    for sec in secs:
+        v = str(sec)
+        i = 0
+        while True:
+            try:
+                i = v.index('{{email|', i) + 8
+            except ValueError:
+                break
+
+            try:
+                e = v.index('}}', i + 1)
+            except ValueError:
+                e = len(v)
+
+            x = parse_email(v[i:e])
+            if x:
+                players.append(x)
+
+            i = e + 1
 
     for sec in secs:
         page.remove(sec)
@@ -255,6 +299,8 @@ async def run():
         for f in glob.glob(f"{ipath}/[0-9]*"):
             b = os.path.basename(f)
             tg.create_task(parse_page(f, f"{opath}/{b}.json"))
+
+    print('')
 
 
 if __name__ == '__main__':
