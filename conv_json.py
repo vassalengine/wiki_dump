@@ -868,9 +868,9 @@ def process_json(conn, file_meta, file_ctimes, page_ctimes, filename, num):
 
     do_insert(conn, 'projects_w', 'project_id', mrec)
 
-    owners = [(e['address'], e['name']) for e in p.get('maintainer', [])]
-    contribs = [(e['address'], e['name']) for e in p.get('contributors', [])] 
-    players = [(e['address'], e['name']) for e in p.get('players', [])]
+    owners = p.get('maintainer', [])
+    contribs = p.get('contributors', [])
+    players = p.get('players', [])
 
     possible_owners = []
     possible_contribs = []
@@ -882,8 +882,8 @@ def process_json(conn, file_meta, file_ctimes, page_ctimes, filename, num):
                 'semver': -1
             }
 
-            fmaints = [(e['address'], e['name'])for e in mod['maintainers']]
-            fcontribs = [(e['address'], e['name']) for e in mod['contributors']]
+            fmaints = mod['maintainers']
+            fcontribs = mod['contributors']
             fpub = None
 
             if d := mod.get('date'):

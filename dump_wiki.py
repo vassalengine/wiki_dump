@@ -19,7 +19,7 @@ def parse_game_info(page):
     gi = gi[0]
 
     ret = {
-        k: str(gi.get(k)).replace(f'{k}=', '') for k in
+        k: str(gi.get(k)).replace(f'{k}=', '').strip() for k in
         [
             'image',
             'publisher',
@@ -109,7 +109,7 @@ def parse_modules(page):
             continue
 
         if tm.name in ('ModuleVersion', 'ModuleVersion2'):
-            key = str(tm.get('version')).replace('version=', '') if tm.has('version') else ''
+            key = str(tm.get('version')).replace('version=', '').strip() if tm.has('version') else ''
             cur = tab.setdefault(key, [])
             continue
 
@@ -117,7 +117,7 @@ def parse_modules(page):
             tab[''] = cur = []
 
         db = {
-            k: str(tm.get(k)).replace(f'{k}=', '').replace('\u200E', '')
+            k: str(tm.get(k)).replace(f'{k}=', '').replace('\u200E', '').strip()
             for k in
             [
                 'filename',
@@ -193,8 +193,8 @@ def parse_players(page):
 
 def extract(e):
     fields = e.split('|')
-    img = fields[0].replace('Image:', '')
-    alt = '' if len(fields) < 2 else fields[1]
+    img = fields[0].replace('Image:', '').strip()
+    alt = '' if len(fields) < 2 else fields[1].strip()
 
     return {
         'img': img,
