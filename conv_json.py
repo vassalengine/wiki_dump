@@ -799,7 +799,7 @@ def parse_screenshot_image(filename, file_meta, file_ctimes):
             if url := get_url(filename, file_meta):
                 irec['url'] = url
 
-            if ctime := file_ctimes.get(f"File:{filename.replace('_', ' ')}"):
+            if ctime := file_ctimes.get(ctime_key(filename)):
                 irec['published_at'] = ctime
 
             if ipub := get_publisher(filename, file_meta):
@@ -824,6 +824,11 @@ def title_sort_key(title):
 
 def to_ts(d):
     return datetime.datetime.fromisoformat(d).timestamp() * (10**9)
+
+
+def ctime_key(f):
+    f = f.replace('_', ' ')
+    return f[0].upper() + f[1:]
 
 
 def process_json(conn, file_meta, file_ctimes, filename, num):
@@ -907,7 +912,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
                 if url := get_url(filename, file_meta):
                     frec['fileurl'] = url
 
-                if ctime := file_ctimes.get(f"File:{filename.replace('_', ' ')}"):
+                if ctime := file_ctimes.get(ctime_key(filename)):
                     frec['published_at'] = ctime
 
                 fpub = get_publisher(filename, file_meta)
@@ -978,7 +983,7 @@ async def run():
     with open(f_ctime_path, 'r') as f:
         file_ctimes = json.load(f)
 
-    file_ctimes = { k: to_ts(v) for k, v in file_ctimes.items() }
+    file_ctimes = { k.removeprefix('File:'): to_ts(v) for k, v in file_ctimes.items() }
 
     with contextlib.closing(sqlite3.connect(dbpath)) as conn:
         create_db(conn)
