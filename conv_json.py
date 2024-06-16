@@ -638,7 +638,6 @@ WHERE projects.project_id = x.project_id
             '''
         )
 
-# FIXME: should also check mtime of page, might be later
         cur.execute('''
 UPDATE projects
 SET modified_at = x.published_at
