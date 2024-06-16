@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import email.utils
 import glob
 import json
@@ -246,7 +247,7 @@ def remove_cruft(page):
             pass
 
 
-async def parse_page(inpath, outpath):
+async def parse_page(inpath, outpath, ctimes):
     with open(inpath, 'r') as infile:
         p = json.load(infile)['parse']
 
@@ -262,7 +263,8 @@ async def parse_page(inpath, outpath):
     if 'Category:Banned' in wikitext:
         return
 
-    title = p['title'].removeprefix('Module:')
+    ns_title = p['title']
+    title = ns_title.removeprefix('Module:')
     t = mwparserfromhell.parse(wikitext)
 
     ginfo = parse_game_info(t)
@@ -276,6 +278,7 @@ async def parse_page(inpath, outpath):
 
     page = {
         'title': title,
+        'ctime': ctimes[ns_title],
         'info': ginfo,
         'maintainer': maintainer,
         'contributors': contributors,
@@ -292,13 +295,20 @@ async def parse_page(inpath, outpath):
 
 
 async def run():
+    ctime_path = 'data/page_ctimes.json'
+
+    with open(ctime_path, 'r') as f:
+        ctimes = json.load(f)
+
     ipath = 'data/wikitext'
     opath = 'data/pagejson'
+
+    os.mkdir(opath)
 
     async with asyncio.TaskGroup() as tg:
         for f in glob.glob(f"{ipath}/[0-9]*"):
             b = os.path.basename(f)
-            tg.create_task(parse_page(f, f"{opath}/{b}.json"))
+            tg.create_task(parse_page(f, f"{opath}/{b}.json", ctimes))
 
     print('')
 
