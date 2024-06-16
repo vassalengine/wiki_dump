@@ -823,7 +823,11 @@ def title_sort_key(title):
     return title
 
 
-def process_json(conn, file_meta, file_ctimes, page_ctimes, filename, num):
+def to_ts(d):
+    return datetime.datetime.fromisoformat(d).timestamp() * (10**9)
+
+
+def process_json(conn, file_meta, file_ctimes, filename, num):
     print(num)
 
     with open(filename, 'r') as f:
@@ -850,7 +854,7 @@ def process_json(conn, file_meta, file_ctimes, page_ctimes, filename, num):
         'game_title': title,
         'game_title_sort_key': title_sort_key(title),
         'project_id': num,
-        'created_at': page_ctimes[f"Module:{title}"],
+        'created_at': to_ts(p['ctime']),
         'text': readme
     }
 
@@ -951,10 +955,10 @@ def process_json(conn, file_meta, file_ctimes, page_ctimes, filename, num):
         do_insert_or_ignore(conn, 'images_w', 'project_id', e)
 
 
-async def process_json_async(conn, files, file_ctimes, page_ctimes, filename, num):
+async def process_json_async(conn, files, file_ctimes, filename, num):
     with conn as cur:
         try:
-            process_json(cur, files, file_ctimes, page_ctimes, filename, num)
+            process_json(cur, files, file_ctimes, filename, num)
         except Exception as e:
             raise RuntimeError(f"!!! {num}") from e
 
@@ -964,7 +968,6 @@ async def run():
     upath = 'data/users.json'
     vpath = 'data/versions'
     wpath = 'data/pagejson'
-    p_ctime_path = 'data/page_ctimes.json'
     f_ctime_path = 'data/file_ctimes.json'
     dbpath = 'projects.db'
 
@@ -974,12 +977,7 @@ async def run():
     with open(f_ctime_path, 'r') as f:
         file_ctimes = json.load(f)
 
-    file_ctimes = { k: datetime.datetime.fromisoformat(v).timestamp() * (10**9) for k, v in file_ctimes.items() }
-
-    with open(p_ctime_path, 'r') as f:
-        page_ctimes = json.load(f)
-
-    page_ctimes = { k: datetime.datetime.fromisoformat(v).timestamp() * (10**9) for k, v in page_ctimes.items() }
+    file_ctimes = { k: to_ts(v) for k, v in file_ctimes.items() }
 
     with contextlib.closing(sqlite3.connect(dbpath)) as conn:
         create_db(conn)
@@ -988,7 +986,7 @@ async def run():
         async with asyncio.TaskGroup() as tg:
             for f in glob.glob(f"{wpath}/[0-9]*.json"):
                 num = int(os.path.basename(f).removesuffix('.json'))
-                tg.create_task(process_json_async(conn, files, file_ctimes, page_ctimes, f, num))
+                tg.create_task(process_json_async(conn, files, file_ctimes, f, num))
 
         populate_versions(conn, vpath)
         convert_for_gls(conn)
