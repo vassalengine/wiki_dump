@@ -40,7 +40,7 @@ async def get_page_list(session, url, ns):
     return pages
 
 
-async def get_ctime(session, url, title, direction, ctimes):
+async def get_time(session, url, title, direction, times):
     params = {
         'action': 'query',
         'format': 'json',
@@ -55,7 +55,7 @@ async def get_ctime(session, url, title, direction, ctimes):
         r = await response.json()
         for k, v in r['query']['pages'].items():
             try:
-                ctimes[title] = datetime.fromisoformat(v['revisions'][0]['timestamp']).isoformat()
+                times[title] = datetime.fromisoformat(v['revisions'][0]['timestamp']).isoformat()
                 print('.', end='', file=sys.stderr)
             except KeyError:
                 print(v, file=sys.stderr)
@@ -63,14 +63,22 @@ async def get_ctime(session, url, title, direction, ctimes):
             break
 
 
-async def get_ctimes(session, url, direction, pages):
-    ctimes = {}
+async def get_times(session, url, direction, pages):
+    times = {}
 
     async with asyncio.TaskGroup() as tg:
         for i, p in enumerate(pages):
-            tg.create_task(get_ctime(session, url, p['title'], direction, ctimes))
+            tg.create_task(get_time(session, url, p['title'], direction, times))
 
-    return ctimes
+    return times
+
+
+async def get_ctimes(session, url, pages):
+    return await get_times(session, url, 'newer', pages)
+
+
+async def get_mtimes(session, url, pages):
+    return await get_times(session, url, 'older', pages)
 
 
 async def get_wikitext(session, url, title, outpath):
@@ -144,7 +152,8 @@ async def run():
         with open('data/files.json', 'w') as f:
             json.dump(file_meta, f, indent=2)
 
-        file_ctimes = await get_ctimes(session, url, 'older', files)
+        # the mtime of a file is the ctime of the current version
+        file_ctimes = await get_mtimes(session, url, files)
 
         with open('data/file_ctimes.json', 'w') as f:
             json.dump(file_ctimes, f, indent=2)
@@ -154,8 +163,8 @@ async def run():
         #
 
         pages = await get_page_list(session, url, 100)
-        page_ctimes = await get_ctimes(session, url, 'newer', pages)
 
+        page_ctimes = await get_ctimes(session, url, pages)
         with open('data/page_ctimes.json', 'w') as f:
             json.dump(page_ctimes, f, indent=2)
 
