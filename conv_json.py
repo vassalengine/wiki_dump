@@ -879,7 +879,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
     possible_owners = []
     possible_contribs = []
 
-    for pkg, mods in p.get('modules', {}).items():
+    for ver, mods in p.get('modules', {}).items():
         for mod in mods:
             frec = {
                 'project_id': num,
@@ -889,6 +889,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
             fmaints = mod['maintainers']
             fcontribs = mod['contributors']
             fpub = None
+            pkg = None
 
             if d := mod.get('date'):
                 frec['date'] = parse_date(d)
@@ -900,6 +901,8 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
             if version := frec.get('version'):
                 frec['version_raw'] = version
                 del frec['version']
+            elif ver:
+                frec['version_raw'] = version
 
             if filename := frec.get('filename'):
                 if url := get_url(filename, file_meta):
@@ -910,8 +913,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
 
                 fpub = get_publisher(filename, file_meta)
 
-                if not pkg:
-                    pkg = try_extract_package(filename)
+                pkg = try_extract_package(filename)
 
             if pkg:
                 pkg_id = add_or_get_package(conn, num, pkg)
