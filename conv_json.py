@@ -6,6 +6,7 @@ import json
 import os.path
 import re
 import sqlite3
+import urllib.parse
 
 import dateutil.parser
 import pypandoc
@@ -292,8 +293,11 @@ def populate_versions(conn, vpath):
                 url, size, sha256, version = line.split('\t')
 
                 url = url.strip()
-                version = version.strip()
+                rest, filename = url.rsplit('/', maxsplit=1)
+                filename = urllib.parse.quote(filename)
+                url = f"{rest}/{filename}"
 
+                version = version.strip()
                 v = try_parse_version(version)
 
                 if v is not None:
