@@ -289,16 +289,12 @@ def populate_versions(conn, vpath):
         # insert version information from reading modulefiles
         with open(vpath, 'r') as f:
             for line in f:
-                s = line.split('\t', maxsplit=3)
+                url, size, sha256, version = line.split('\t')
 
-                url, size, sha256 = s[0:3]
                 url = url.strip()
-  
-                v = None
+                version = version.strip()
 
-                if len(s) == 4:
-                    version = s[3].strip()
-                    v = try_parse_version(version)
+                v = try_parse_version(version)
 
                 if v is not None:
                     cur.execute('''
@@ -972,7 +968,7 @@ async def process_json_async(conn, files, file_ctimes, filename, num):
 async def run():
     fpath = 'data/files.json'
     upath = 'data/users.json'
-    vpath = 'data/versions'
+    vpath = 'data/file_meta'
     wpath = 'data/pagejson'
     f_ctime_path = 'data/file_ctimes.json'
     dbpath = 'projects.db'
