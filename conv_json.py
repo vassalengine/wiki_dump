@@ -735,7 +735,7 @@ def add_or_get_user(conn, u):
 
     # lookup by username
     if u[1]:
-        c.execute("SELECT user_id FROM users_w WHERE username = ? COLLATE NOCASE", (u[1],))
+        c.execute("SELECT user_id FROM users_w WHERE username = ? COLLATE NOCASE", (u[1].replace(' ', '_'),))
         if r := c.fetchone():
             return r[0]
 
@@ -747,8 +747,8 @@ def add_or_get_user(conn, u):
 
     rec = {
         'email': u[0],
-        'realname': u[1] or '',
-        'username': u[1] or '',
+        'realname': u[1] or None,
+        'username': u[1].replace(' ', '_') if u[1] else '',
         'matched': False
     }
 
