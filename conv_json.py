@@ -909,6 +909,10 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
                 frec['version_raw'] = version
 
             if filename := frec.get('filename'):
+                if ext := os.path.splitext(filename)[1]:
+                    # strip the dot and lowercase
+                    frec['filetype'] = ext[1:].lower()
+
                 if url := get_url(filename, file_meta):
                     frec['fileurl'] = url
 
