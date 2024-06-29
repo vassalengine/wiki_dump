@@ -443,7 +443,7 @@ SELECT
     projects_w.text
 FROM projects_w
 JOIN owners_w
-ON projects_w.project_id = owners_w.project_id 
+ON projects_w.project_id = owners_w.project_id
 GROUP BY projects_w.project_id
             '''
         )
@@ -584,7 +584,7 @@ SELECT
 FROM file_contributors_w
             '''
         )
- 
+
         cur.execute('''
 INSERT INTO images (
     project_id,
@@ -634,7 +634,7 @@ FROM (
     ON projects_w.project_id = images.project_id
         AND projects_w.game_image = images.filename
 ) AS x
-WHERE projects.project_id = x.project_id 
+WHERE projects.project_id = x.project_id
             '''
         )
 
@@ -646,9 +646,9 @@ FROM (
     FROM releases
     JOIN packages
     ON packages.package_id = releases.package_id
-    GROUP BY packages.project_id 
+    GROUP BY packages.project_id
 ) AS x
-WHERE projects.project_id = x.project_id 
+WHERE projects.project_id = x.project_id
             '''
         )
 
@@ -676,7 +676,7 @@ SELECT
     image
 FROM projects
             '''
-        ) 
+        )
 
         cur.execute('''
 INSERT INTO project_revisions (
@@ -722,6 +722,9 @@ def add_or_get_package(conn, proj_id, pkg):
 
     c.execute("INSERT INTO packages_w (project_id, name) VALUES(?, ?) RETURNING package_id", (proj_id, pkg))
     return c.fetchone()[0]
+
+
+bad_username_re = re.compile('[^a-zA-Z0-9._-]')
 
 
 def add_or_get_user(conn, u):
@@ -770,13 +773,13 @@ def fname_for_meta(filename):
 def get_url(filename, file_meta):
     if meta := file_meta.get(fname_for_meta(filename)):
         return meta['url']
-    return None 
+    return None
 
 
 def get_publisher(filename, file_meta):
     if meta := file_meta.get(fname_for_meta(filename)):
         return meta['user']
-    return None 
+    return None
 
 
 image_prefix_re = re.compile(r'^(Image|File)\s*:\s*', flags=re.IGNORECASE)
@@ -844,7 +847,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
     images = [
         parse_screenshot_image(e['img'], file_meta, file_ctimes)
         for e in p['gallery']
-    ] 
+    ]
 
     # convert the remaining wikitext to markdown
     readme = pypandoc.convert_text(p['readme'], 'commonmark', format='mediawiki')
@@ -869,7 +872,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
     if imgname := mrec.get('game_image'):
         if url := get_url(imgname, file_meta):
             imgname = normalize_filename(imgname)
-            mrec['game_image'] = imgname 
+            mrec['game_image'] = imgname
 
             if irec := parse_screenshot_image(imgname, file_meta, file_ctimes):
                 images.append(irec)
@@ -928,7 +931,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
                 frec['package_id'] = pkg_id
 
             if fpub:
-                frec['published_by'] = add_or_get_user(conn, (None, fpub)) 
+                frec['published_by'] = add_or_get_user(conn, (None, fpub))
 
             fid = do_insert(conn, 'files_w', 'file_id', frec)
 
@@ -959,9 +962,9 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
         do_insert_users(conn, 'module_contributors_w', 'project_id', e, num)
 
     for e in images:
-        e['project_id'] = num 
+        e['project_id'] = num
         if ipub := e.get('published_by'):
-            e['published_by'] = add_or_get_user(conn, (None, ipub))                
+            e['published_by'] = add_or_get_user(conn, (None, ipub))
         do_insert_or_ignore(conn, 'images_w', 'project_id', e)
 
 
