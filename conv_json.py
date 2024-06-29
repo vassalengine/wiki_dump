@@ -748,10 +748,23 @@ def add_or_get_user(conn, u):
         if r := c.fetchone():
             return r[0]
 
+    if not u[1]:
+        # create missing username from email address
+        if u[0] and '@' in u[0]:
+            u[1] = u[0].split('@')[0]
+
+    username = u[1].replace(' ', '_') if u[1] else ''
+    realname = u[1] or None
+
+    # use email account as username if username contains illegal chars
+    if bad_username_re.search(username):
+        if u[0] and '@' in u[0]:
+            username = u[0].split('@')[0]
+
     rec = {
         'email': u[0],
-        'realname': u[1] or None,
-        'username': u[1].replace(' ', '_') if u[1] else '',
+        'realname': realname,
+        'username': username,
         'matched': False
     }
 
