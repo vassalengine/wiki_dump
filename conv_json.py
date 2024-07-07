@@ -774,12 +774,13 @@ def add_or_get_user(conn, u):
 
 
 def normalize_filename(filename):
-    filename = filename.replace('_', ' ')
+    filename = filename.replace(' ', '_')
     return filename[0].capitalize() + filename[1:]
 
 
 def fname_for_meta(filename):
-    filename = normalize_filename(filename)
+    filename = filename.replace('_', ' ')
+    filename = filename[0].capitalize() + filename[1:]
     return f"File:{filename}"
 
 
@@ -807,10 +808,9 @@ def parse_screenshot_image(filename, file_meta, file_ctimes):
 
         filename = filename.lstrip().split('|')[0].replace('%20', ' ').rstrip()
         filename = image_prefix_re.sub('', filename)
-        filename = filename[0:1].upper() + filename[1:]
 
         if filename:
-            irec['filename'] = filename
+            irec['filename'] = normalize_filename(filename)
 
             if url := get_url(filename, file_meta):
                 irec['url'] = url
@@ -884,8 +884,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
     # convert game image url to game image name
     if imgname := mrec.get('game_image'):
         if url := get_url(imgname, file_meta):
-            imgname = normalize_filename(imgname)
-            mrec['game_image'] = imgname
+            mrec['game_image'] = normalize_filename(imgname)
 
             if irec := parse_screenshot_image(imgname, file_meta, file_ctimes):
                 images.append(irec)
