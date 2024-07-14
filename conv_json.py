@@ -435,7 +435,7 @@ SELECT
     projects_w.created_at,
     MIN(owners_w.user_id),
     1,
-    projects_w.game_title,
+    "",
     projects_w.game_title,
     projects_w.game_title_sort_key,
     COALESCE(projects_w.game_publisher, ""),
