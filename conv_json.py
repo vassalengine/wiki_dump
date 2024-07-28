@@ -111,6 +111,7 @@ CREATE TABLE files_w (
     checksum TEXT,
     published_at INTEGER,
     published_by INTEGER,
+    compatibility_raw TEXT,
     compatibility TEXT,
     FOREIGN KEY(project_id) REFERENCES projects_w(project_id),
     FOREIGN KEY(package_id) REFERENCES packages_w(package_id),
@@ -187,6 +188,7 @@ CREATE TABLE releases_w (
     url TEXT,
     size INTEGER,
     checksum TEXT,
+    requires TEXT,
     published_at INTEGER,
     published_by INTEGER,
     FOREIGN KEY(package_id) REFERENCES packages(package_id),
@@ -403,6 +405,80 @@ WHERE file_id = ?
                     )
 
 
+vassal_re = re.compile('vassal|engine', re.I)
+
+compat_hashes = {
+    '8392bed7a2938557d77377f19ad9fa8ed56f46ef07555e26c20a49125a15273b': None,
+    '3ed67d57ef9ae2b9b915944fa506e780e3eab48b7da7d9137f7932975087c3a0': None,
+    '4043d8ab0a27fbb8e19853cd4161097059480db16f9c0c43d5f6c37649511817': '<= 2.9.9',
+    '83ab8765eda31f48781a566f25e170ab798e1070345454ab1d9ada6351772b13': '<= 2.9.9',
+    '895c606b9ff81d36be73d18b705d882a1b014738f5b253ef3bc7af5d9e05ce4c': None,
+    '94e80985ce4812c9e50d99211665316f717f1aed79e9391bfea1ef12667889f1': None,
+    'b6bc13fb6f2693c19e262747bc8a21f5762f9677f5d7a23e9948122589d70281': None,
+    '77032aebc061016acf4c98061cb604ab8fd9e54ee93641503f6f39135031d9ab': None,
+    'a1fe80a87b1519f9e45b3a0195888458255b63d020925bf50ac0dd28701666bb': None,
+    'c4de2b29d255edcf201edd465195e3cee366e5cacc77b84e42cc864b3ae1e131': '>= 3.2.0, <= 3.4',
+    '172ad09d0a0cbeb1002115d4c84f5dcff82df513b26e7df02cc5928e328b5f72': '>= 3.2.0, <= 3.4',
+    'a000c078bab580871646f58b30f4638493cac5741c138d60fbb553dc26f0a644': '>= 3.1.14, <= 3.2.2',
+    '08a334efe2de86a4161f649dccb439b7f2d079853631881093b389c9016010a1': '>= 3.1.17, <= 3.2.2',
+    '681b59211a1cdbf2c8ee84a81f50621d164af0b328cab0255006bc822b31295a': '>= 3.4, <= 3.5',
+    'cf48713e4af042016c0abcb2180f645ba6353e82853cd05b4cad31523203833b': '>= 3.5, != 3.6.0, != 3.6.1, != 3.6.2, != 3.6.3 != 3.6.4',
+    '8cfdc84a9e48302e1d554fedd41b883843c9dc8db027195d0562602156a885c3': '>= 3.2.17, < 3.4',
+    '87adbd9488e1691d069bc88ac39f6c54775b0e4c0070fb04bec16a29ad2860bf': '>= 3.2.17, <= 3.5.8',
+    '5effa6cb2eff2ff652cb88d51dd44e54bda3d1746afbe084aa40aecee10c45b4': '>= 3.2.17, <= 3.5.8',
+    'be820a44f2ad3b540dd6c7b4e6e8083d7c1c91f338ec5dd9697fb2ef584664f6': '>= 3.2.17, <= 3.5.8',
+}
+
+
+def populate_compatibility(conn):
+    with conn as cur:
+        rows = cur.execute('''
+SELECT file_id, compatibility_raw, checksum
+FROM files_w
+WHERE compatibility_raw IS NOT NULL
+            '''
+        )
+
+        for row in rows:
+            version = vassal_re.sub('', row[1], count=1).replace('+', '').replace("'", '').strip()
+
+            compat = None
+
+            if row[2] in compat_hashes:
+                cv = compat_hashes[row[2]]
+                if cv is None:
+                    v = try_parse_version(version)
+                    compat = f">= {v}"
+                else:
+                    compat = cv
+
+            else:
+                if version.endswith(' or lower'):
+                    version = version.removesuffix(' or lower')
+                    op = '<='
+                else:
+                    op = '>='
+
+                if v := try_parse_version(version):
+                    # skip versions which aren't Vassal ones
+                    if v.major != 3 or v.minor > 7:
+                        continue
+
+                    compat = f"{op} {v}"
+
+            if compat is not None:
+                cur.execute('''
+UPDATE files_w
+SET compatibility = ?
+WHERE file_id = ?
+                    ''',
+                    (
+                        compat,
+                        row[0]
+                    )
+                )
+
+
 def convert_for_gls(conn):
     with conn as cur:
         cur.execute('''
@@ -493,6 +569,7 @@ INSERT INTO releases_w (
     filename,
     size,
     checksum,
+    requires,
     published_at,
     published_by
 )
@@ -551,6 +628,7 @@ INSERT OR IGNORE INTO releases (
     filename,
     size,
     checksum,
+    requires,
     published_at,
     published_by
 )
@@ -1035,6 +1113,12 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
             elif ver:
                 frec['version_raw'] = version
 
+            if compat := frec.get('compatibility'):
+                frec['compatibility_raw'] = compat
+                del frec['compatibility']
+            elif ver:
+                frec['compatibility_raw'] = compat
+
             if filename := frec.get('filename'):
                 if ext := os.path.splitext(filename)[1]:
                     # strip the dot and lowercase
@@ -1126,6 +1210,7 @@ async def run():
                 tg.create_task(process_json_async(conn, files, file_ctimes, f, num))
 
         populate_versions(conn, vpath)
+        populate_compatibility(conn)
         convert_for_gls(conn)
 
 
