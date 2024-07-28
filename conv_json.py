@@ -54,7 +54,11 @@ CREATE TABLE projects_w (
     game_topic TEXT,
     game_scale TEXT,
     game_players TEXT,
+    game_players_min INTEGER,
+    game_players_max INTEGER,
     game_length TEXT,
+    game_length_min INTEGER,
+    game_length_max INTEGER,
     game_series TEXT,
     game_image TEXT,
     created_at INTEGER,
@@ -425,6 +429,10 @@ INSERT INTO projects (
     game_title_sort,
     game_publisher,
     game_year,
+    game_players_min,
+    game_players_max,
+    game_length_min,
+    game_length_max,
     readme
 )
 SELECT
@@ -440,6 +448,10 @@ SELECT
     projects_w.game_title_sort_key,
     COALESCE(projects_w.game_publisher, ""),
     COALESCE(projects_w.game_year, ""),
+    projects_w.game_players_min,
+    projects_w.game_players_max,
+    projects_w.game_length_min,
+    projects_w.game_length_max,
     projects_w.text
 FROM projects_w
 JOIN owners_w
@@ -661,6 +673,10 @@ INSERT INTO project_data (
     game_title_sort,
     game_publisher,
     game_year,
+    game_players_min,
+    game_players_max,
+    game_length_min,
+    game_length_max,
     readme,
     image
 )
@@ -672,6 +688,10 @@ SELECT
     game_title_sort,
     game_publisher,
     game_year,
+    game_players_min,
+    game_players_max,
+    game_length_min,
+    game_length_max,
     readme,
     image
 FROM projects
@@ -847,6 +867,84 @@ def ctime_key(f):
     return f[0].upper() + f[1:]
 
 
+players_re = re.compile(r'(\d+)(?:\+|(?:\s*(?:-|to)\s*(\d+)))?', flags=re.I)
+
+
+def split_players(pltag):
+    if m := players_re.fullmatch(pltag):
+        return m.group(1), m.group(2)
+    else:
+        return None, None
+
+
+lsplit_re = re.compile(r'\s*(?:-|–|−|to|à)\s*', flags=re.I)
+usplit_re = re.compile(r'(\d+(?:\.\d+)?)\+?\s*(\w*\.?)')
+
+
+def parse_length(l):
+    if m := usplit_re.fullmatch(l):
+        val = m.group(1)
+        unit = m.group(2)
+
+        unit = unit.lower()
+        if unit.startswith('m'):
+            unit = 'm'
+        elif unit.startswith('h'):
+            unit = 'h'
+        else:
+            unit = None
+
+    else:
+        val = None
+        unit = None
+
+    return val, unit
+
+
+def parse_length_tag(ltag):
+    l = lval = lunit = r = rval = runit = None
+
+    ltag = ltag.lower().replace('+', '').replace('~', '').replace('>', '').strip()
+
+    if 'turns' not in ltag:
+        s = lsplit_re.split(ltag, maxsplit=1)
+        l = s[0]
+        r = s[1] if len(s) == 2 else None
+
+        if l.startswith('<'):
+            r = l[1:].strip()
+            l = None
+
+        if l:
+            lval, lunit = parse_length(l)
+
+        if r:
+            rval, runit = parse_length(r)
+
+        if runit and lval and not lunit:
+            lunit = runit
+
+        if lval and not lunit:
+            lunit = 'm'
+
+        if rval and not runit:
+            runit = 'm'
+
+        if lval:
+            if lunit == 'h':
+                lval = int(float(lval) * 60)
+            else:
+                lval = int(lval)
+
+        if rval:
+            if runit == 'h':
+                rval = int(float(rval) * 60)
+            else:
+                rval = int(rval)
+
+    return lval, rval
+
+
 def process_json(conn, file_meta, file_ctimes, filename, num):
     print(num)
 
@@ -880,6 +978,20 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
 
     for k, v in p['info'].items():
         mrec[f"game_{k}"] = v
+
+    if num_players := mrec.get('game_players'):
+        pmin, pmax = split_players(num_players)
+        if pmin:
+            mrec['game_players_min'] = pmin
+        if pmax:
+            mrec['game_players_max'] = pmax
+
+    if length := mrec.get('game_length'):
+        lmin, lmax = parse_length_tag(length)
+        if lmin:
+            mrec['game_length_min'] = lmin
+        if lmax:
+            mrec['game_length_max'] = lmax
 
     # convert game image url to game image name
     if imgname := mrec.get('game_image'):
