@@ -210,6 +210,16 @@ CREATE TABLE images_w (
 )
         ''')
 
+        cur.execute('DROP TABLE IF EXISTS tags_w')
+        cur.execute('''
+CREATE TABLE tags_w (
+  project_id INTEGER NOT NULL,
+  tag TEXT NOT NULL,
+  FOREIGN KEY(project_id) REFERENCES projects_w(project_id),
+  UNIQUE(project_id, tag)
+)
+        ''')
+
 
 def populate_users(conn, upath):
     with open(upath, 'r') as f:
@@ -798,6 +808,18 @@ FROM projects
             '''
         )
 
+        cur.execute('''
+INSERT INTO tags (
+    project_id,
+    tag
+)
+SELECT
+    project_id,
+    tag
+FROM tags_w
+            '''
+        )
+
 
 # TODO: could get date, version out of module
 def parse_date(v):
@@ -1080,6 +1102,23 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
                 images.append(irec)
 
     do_insert(conn, 'projects_w', 'project_id', mrec)
+
+    # make tags
+    tags = []
+    if era := mrec.get('game_era'):
+        tags.append(f"era:{era}")
+
+    if topic := mrec.get('game_topic'):
+        tags.append(f"topic:{topic}")
+
+    if scale := mrec.get('game_scale'):
+        tags.append(f"scale:{scale}")
+
+    if series := mrec.get('game_series'):
+        tags.append(f"series:{series}")
+
+    for t in tags:
+        do_insert(conn, 'tags_w', 'project_id', {'project_id': num, 'tag': t})
 
     owners = p.get('maintainer', [])
     contribs = p.get('contributors', [])
