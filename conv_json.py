@@ -599,22 +599,24 @@ INSERT INTO releases_w (
     published_by
 )
 SELECT
-    files_w.package_id,
-    files_w.version,
-    files_w.version_major,
-    files_w.version_minor,
-    files_w.version_patch,
+    package_id,
+    version,
+    version_major,
+    version_minor,
+    version_patch,
     COALESCE(files_w.version_pre, ""),
     COALESCE(files_w.version_build, ""),
-    files_w.fileurl,
-    files_w.filename,
-    files_w.size,
-    files_w.checksum,
-    files_w.published_at,
-    files_w.published_by
+    fileurl,
+    filename,
+    size,
+    checksum,
+    compatibility,
+    published_at,
+    published_by
 FROM files_w
-WHERE files_w.filename IS NOT NULL
-    AND files_w.package_id IS NOT NULL
+WHERE filename IS NOT NULL
+    AND package_id IS NOT NULL
+    AND filetype = "vmod"
             '''
         )
 
@@ -660,6 +662,27 @@ INSERT OR IGNORE INTO releases (
 SELECT
     release_id,
     package_id,
+    COALESCE(version, "0.0.0"),
+    COALESCE(version_major, 0),
+    COALESCE(version_minor, 0),
+    COALESCE(version_patch, 0),
+    version_pre,
+    version_build,
+    url,
+    filename,
+    size,
+    checksum,
+    COALESCE(requires, ""),
+    published_at,
+    published_by
+FROM releases_w
+            '''
+        )
+
+        cur.execute('''
+INSERT OR IGNORE INTO files (
+    file_id,
+    package_id,
     version,
     version_major,
     version_minor,
@@ -672,7 +695,26 @@ SELECT
     checksum,
     published_at,
     published_by
-FROM releases_w
+)
+SELECT
+    file_id,
+    package_id,
+    COALESCE(version, "0.0.0"),
+    COALESCE(version_major, 0),
+    COALESCE(version_minor, 0),
+    COALESCE(version_patch, 0),
+    COALESCE(version_pre, ""),
+    COALESCE(version_build, ""),
+    fileurl,
+    filename,
+    size,
+    checksum,
+    published_at,
+    published_by
+FROM files_w
+WHERE filename IS NOT NULL
+    AND package_id IS NOT NULL
+    AND filetype != "vmod"
             '''
         )
 
@@ -1203,9 +1245,19 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
                 frec['compatibility_raw'] = compat
 
             if filename := frec.get('filename'):
-                if ext := os.path.splitext(filename)[1]:
+                ext = os.path.splitext(filename)[1]
+
+                if ext:
                     # strip the dot and lowercase
-                    frec['filetype'] = ext[1:].lower()
+                    ext = ext[1:].lower()
+                    frec['filetype'] = ext
+
+                    if ext == 'vmod':
+                        pkg = try_extract_package(filename)
+                    else:
+                        pkg = 'Files'
+                else:
+                    pkg = 'Files'
 
                 if url := get_url(filename, file_meta):
                     frec['fileurl'] = url
@@ -1214,8 +1266,6 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
                     frec['published_at'] = ctime
 
                 fpub = get_publisher(filename, file_meta)
-
-                pkg = try_extract_package(filename)
 
             if pkg:
                 pkg_id = add_or_get_package(conn, num, pkg)
