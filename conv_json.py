@@ -1147,12 +1147,15 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
             gallery.append(grec)
 
     # convert the remaining wikitext to markdown
-    readme = pypandoc.convert_text(p['readme'], 'commonmark', format='mediawiki')
+    readme = pypandoc.convert_text(
+        p['readme'], 'commonmark', format='mediawiki'
+    )
 
     # remove spurious HTML comments
     readme = readme.replace("""```{=html}
 <!-- -->
 ```""", '')
+    readme = readme.replace("<!-- -->\n", '')
 
     mrec = {
         'game_title': title,
