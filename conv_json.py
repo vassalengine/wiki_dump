@@ -210,6 +210,21 @@ CREATE TABLE images_w (
 )
         ''')
 
+        cur.execute('DROP TABLE IF EXISTS galleries_w')
+        cur.execute('''
+CREATE TABLE galleries_w (
+  project_id INTEGER NOT NULL,
+  filename TEXT NOT NULL,
+  description TEXT,
+  published_at INTEGER,
+  published_by INTEGER,
+  FOREIGN KEY(project_id) REFERENCES projects_w(project_id),
+  FOREIGN KEY(published_by) REFERENCES users_w(user_id),
+  FOREIGN KEY(project_id, filename) REFERENCES images_w(project_id, filename),
+  UNIQUE(project_id, filename)
+)
+        ''')
+
         cur.execute('DROP TABLE IF EXISTS tags_w')
         cur.execute('''
 CREATE TABLE tags_w (
@@ -725,6 +740,25 @@ FROM images
         )
 
         cur.execute('''
+INSERT INTO galleries (
+    project_id,
+    filename,
+    description,
+    published_at,
+    published_by
+)
+SELECT
+    project_id,
+    filename,
+    description,
+    published_at,
+    published_by
+FROM galleries_w
+WHERE published_at IS NOT NULL
+    AND published_by IS NOT NULL
+        ''')
+
+        cur.execute('''
 UPDATE projects
 SET image = x.filename
 FROM (
@@ -1055,10 +1089,20 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
 
     title = p['title']
 
-    images = [
-        parse_screenshot_image(e['img'], file_meta, file_ctimes)
-        for e in p['gallery']
-    ]
+    images = []
+    gallery = []
+    for e in p['gallery']:
+        irec = parse_screenshot_image(e['img'], file_meta, file_ctimes)
+        if irec:
+            images.append(irec)
+
+            gdesc = pypandoc.convert_text(
+                e['alt'], 'commonmark', format='mediawiki'
+            ).strip()
+            grec = { **irec, 'description': gdesc }
+            grec.pop('url', None)
+
+            gallery.append(grec)
 
     # convert the remaining wikitext to markdown
     readme = pypandoc.convert_text(p['readme'], 'commonmark', format='mediawiki')
@@ -1213,6 +1257,12 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
         if ipub := e.get('published_by'):
             e['published_by'] = add_or_get_user(conn, (None, ipub))
         do_insert_or_ignore(conn, 'images_w', 'project_id', e)
+
+    for e in gallery:
+        e['project_id'] = num
+        if ipub := e.get('published_by'):
+            e['published_by'] = add_or_get_user(conn, (None, ipub))
+        do_insert_or_ignore(conn, 'galleries_w', 'project_id', e)
 
 
 async def process_json_async(conn, files, file_ctimes, filename, num):
