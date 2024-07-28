@@ -191,7 +191,7 @@ CREATE TABLE releases_w (
     requires TEXT,
     published_at INTEGER,
     published_by INTEGER,
-    FOREIGN KEY(package_id) REFERENCES packages(package_id),
+    FOREIGN KEY(package_id) REFERENCES packages_w(package_id),
     FOREIGN KEY(published_by) REFERENCES users_w(user_id)
 )
         ''')
@@ -204,8 +204,8 @@ CREATE TABLE images_w (
   url TEXT,
   published_at INTEGER,
   published_by INTEGER,
-  FOREIGN KEY(project_id) REFERENCES projects(project_id),
-  FOREIGN KEY(published_by) REFERENCES users(user_id),
+  FOREIGN KEY(project_id) REFERENCES projects_w(project_id),
+  FOREIGN KEY(published_by) REFERENCES users_w(user_id),
   UNIQUE(project_id, filename)
 )
         ''')
