@@ -139,7 +139,7 @@ async def get_all_file_meta(session, url, files):
 
 
 async def run():
-    os.mkdir('data')
+    os.makedirs('data', exist_ok=True)
 
     url = 'https://vassalengine.org/w/api.php'
     conn = aiohttp.TCPConnector(limit=50)
