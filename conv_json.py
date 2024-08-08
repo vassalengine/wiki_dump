@@ -6,6 +6,7 @@ import json
 import os.path
 import re
 import sqlite3
+import unicodedata
 import urllib.parse
 
 import dateutil.parser
@@ -218,10 +219,12 @@ CREATE TABLE galleries_w (
   description TEXT,
   published_at INTEGER,
   published_by INTEGER,
+  position INTEGER NOT NULL,
   FOREIGN KEY(project_id) REFERENCES projects_w(project_id),
   FOREIGN KEY(published_by) REFERENCES users_w(user_id),
   FOREIGN KEY(project_id, filename) REFERENCES images_w(project_id, filename),
-  UNIQUE(project_id, filename)
+  UNIQUE(project_id, filename),
+  UNIQUE(project_id, position)
 )
         ''')
 
@@ -250,6 +253,15 @@ def populate_users(conn, upath):
                 'matched': True
             }
             do_insert(cur, 'users_w', 'user_id', rec)
+
+
+def add_placeholder_user_emails(conn):
+    with conn as cur:
+        cur.execute('''
+UPDATE users_w
+SET email = FORMAT("placeholder+%s@vassal.org", username)
+WHERE email IS NULL
+        ''')
 
 
 def try_extract_package(filename):
@@ -787,14 +799,16 @@ INSERT INTO galleries (
     filename,
     description,
     published_at,
-    published_by
+    published_by,
+    position
 )
 SELECT
     project_id,
     filename,
     description,
     published_at,
-    published_by
+    published_by,
+    position
 FROM galleries_w
 WHERE published_at IS NOT NULL
     AND published_by IS NOT NULL
@@ -920,12 +934,12 @@ def add_or_get_package(conn, proj_id, pkg):
     return c.fetchone()[0]
 
 
-bad_username_re = re.compile('[^a-zA-Z0-9._-]')
+def remove_accents(s):
+    nfkd_form = unicodedata.normalize('NFKD', s)
+    return "".join([c for c in nfkd_form if not unicodedata.combining(c)])
 
 
-def add_or_get_user(conn, u):
-    c = conn.cursor()
-
+def lookup_user(c, u):
     # lookup by email
     if u[0]:
         c.execute("SELECT user_id FROM users_w WHERE email = ? COLLATE NOCASE", (u[0],))
@@ -944,21 +958,72 @@ def add_or_get_user(conn, u):
         if r := c.fetchone():
             return r[0]
 
+    return None
+
+
+bad_username_re = re.compile('[^a-zA-Z0-9._-]')
+
+
+user_map = {
+    'dulgin@arcor.de': 'iberkenkamp-darnedde@arcor.de',
+    'shadowagl@126.com': 'shadowbbs@126.com',
+    'gaetbe@gmail.com': 'gaetbe@yahoo.fr'
+}
+
+
+def add_or_get_user(conn, u):
+    if sub := user_map.get(u[0], None):
+        u = (sub, u[1])
+
+    c = conn.cursor()
+
+    if uid := lookup_user(c, u):
+        return uid
+
+    if not u[0] and '@' in u[1]:
+        # maybe the username is actually the email address; swap them
+        u = (u[1], u[0])
+
+        if uid := lookup_user(c, u):
+            return uid
+
     if not u[1]:
         # create missing username from email address
         if u[0] and '@' in u[0]:
-            u[1] = u[0].split('@')[0]
+            u = (u[0], u[0].split('@')[0])
 
+    email = u[0]
     username = u[1].replace(' ', '_') if u[1] else ''
     realname = u[1] or None
 
-    # use email account as username if username contains illegal chars
+    # if username contains illegal chars
     if bad_username_re.search(username):
-        if u[0] and '@' in u[0]:
-            username = u[0].split('@')[0]
+        if email and '@' in email:
+            # use email account as username
+            username = email.split('@')[0]
+        else:
+            # replace all the illegal chars
+            username = remove_accents(username)
+            username = bad_username_re.sub('', username)
+
+    if email and '@' not in email:
+        email = None
+
+    # usernames must have length in [3,20]
+    if len(username) < 3:
+        username += '_1'
+    elif len(username) > 20:
+        username = username[0:20]
+
+    # usernames must not have consecutive special chars
+    username = re.sub('[._-]{2,}', '_', username)
+
+    # usernames must end with a letter or number
+    if not re.match('[A-Za-z0-9]', username[-1]):
+        username = username[:-1]
 
     rec = {
-        'email': u[0],
+        'email': email,
         'realname': realname,
         'username': username,
         'matched': False
@@ -1311,8 +1376,9 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
             e['published_by'] = add_or_get_user(conn, (None, ipub))
         do_insert_or_ignore(conn, 'images_w', 'project_id', e)
 
-    for e in gallery:
+    for i, e in enumerate(gallery):
         e['project_id'] = num
+        e['position'] = i
         if ipub := e.get('published_by'):
             e['published_by'] = add_or_get_user(conn, (None, ipub))
         do_insert_or_ignore(conn, 'galleries_w', 'project_id', e)
@@ -1351,6 +1417,7 @@ async def run():
                 num = int(os.path.basename(f).removesuffix('.json'))
                 tg.create_task(process_json_async(conn, files, file_ctimes, f, num))
 
+        add_placeholder_user_emails(conn)
         populate_versions(conn, vpath)
         populate_compatibility(conn)
         convert_for_gls(conn)
