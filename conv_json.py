@@ -516,6 +516,27 @@ WHERE file_id = ?
                 )
 
 
+def apply_fixups(conn):
+    with conn as cur:
+
+        # fix sort keys
+        sort_fixup = [
+            ('"The Aragón Front"', 'Aragón Front, The'),
+            ("'65: Squad-Level Combat in the Jungles of Vietnam", '65: Squad-Level Combat in the Jungles of Vietnam'),
+            ("'CA' Tactical Naval Warfare in the Pacific, 1941-45", 'CA Tactical Naval Warfare in the Pacific, 1941-45'),
+            ('(Your Name Here) and the Argonauts', 'Your Name Here and the Argonauts')
+        ]
+
+        for sf in sort_fixup:
+            cur.execute('''
+UPDATE projects_w
+SET game_title_sort_key = ?
+WHERE game_title = ?
+                ''',
+                (sf[1], sf[0])
+            )
+
+
 def convert_for_gls(conn):
     with conn as cur:
         cur.execute('''
@@ -1420,6 +1441,7 @@ async def run():
         add_placeholder_user_emails(conn)
         populate_versions(conn, vpath)
         populate_compatibility(conn)
+        apply_fixups(conn)
         convert_for_gls(conn)
 
 
