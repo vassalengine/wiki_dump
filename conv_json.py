@@ -1305,6 +1305,8 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
 
     possible_owners = []
     possible_contribs = []
+    file_publishers = []
+
 
     for ver, mods in p.get('modules', {}).items():
         for mod in mods:
@@ -1366,6 +1368,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
 
             if fpub:
                 frec['published_by'] = add_or_get_user(conn, (None, fpub))
+                file_publishers.append(fpub)
 
             fid = do_insert(conn, 'files_w', 'file_id', frec)
 
@@ -1388,6 +1391,8 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
             owners = possible_owners
             if not owners:
                 owners = possible_contribs
+                if not owners:
+                    owners = file_publishers
 
     for e in owners:
         do_insert_users(conn, 'owners_w', 'project_id', e, num)
