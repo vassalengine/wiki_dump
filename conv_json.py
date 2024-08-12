@@ -268,7 +268,9 @@ def try_extract_package(filename):
     filename = ext_re.sub('', filename)
 
     if vu := ver_re.search(filename):
-        return filename[:vu.start(0)].rstrip(" _-")
+        # check that we haven't matched the whole filename
+        if vu.start(0) > 0:
+            return filename[:vu.start(0)].rstrip(" _-")
 
 # TODO: these are probably not great package names
     return filename
@@ -322,8 +324,10 @@ def try_extract_version(filename):
     filename = ext_re.sub('', filename)
 
     if vu := ver_re.search(filename):
-        vu = vu.group(0).replace('_', '.').replace('-', '.')
-        return try_parse_version(vu)
+        vu = vu.group(0)
+        if len(vu) < len(filename):
+            vu = vu.replace('_', '.').replace('-', '.')
+            return try_parse_version(vu)
 
     return None
 
