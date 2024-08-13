@@ -1238,7 +1238,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
 
     # convert the remaining wikitext to markdown
     readme = pypandoc.convert_text(
-        p['readme'], 'commonmark', format='mediawiki'
+        p['readme'], 'commonmark+pipe_tables', format='mediawiki'
     )
 
     # remove spurious HTML comments
