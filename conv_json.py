@@ -1241,7 +1241,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
         p['readme'], 'commonmark+pipe_tables', format='mediawiki'
     )
 
-    # remove spurious HTML comments
+    # remove HTML comments
     readme = readme.replace("""```{=html}
 <!-- -->
 ```""", '')
