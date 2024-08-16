@@ -1427,7 +1427,7 @@ async def run():
     fpath = 'data/files.json'
     upath = 'data/users.json'
     vpath = 'data/file_meta'
-    wpath = 'data/pagejson'
+    wpath = 'data/pagejson_fixed'
     f_ctime_path = 'data/file_ctimes.json'
     dbpath = 'projects.db'
 
