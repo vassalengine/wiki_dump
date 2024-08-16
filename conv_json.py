@@ -1308,8 +1308,11 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
     possible_contribs = []
     file_publishers = []
 
+    for sec, mods in p.get('modules', {}).items():
+        # if sec is a version, dump everything into the common package
+        if sec != title and try_parse_version(sec) is not None:
+            sec = None
 
-    for ver, mods in p.get('modules', {}).items():
         for mod in mods:
             frec = {
                 'project_id': num,
@@ -1331,13 +1334,13 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
             if version := frec.get('version'):
                 frec['version_raw'] = version
                 del frec['version']
-            elif ver:
+            elif sec:
                 frec['version_raw'] = version
 
             if compat := frec.get('compatibility'):
                 frec['compatibility_raw'] = compat
                 del frec['compatibility']
-            elif ver:
+            elif sec:
                 frec['compatibility_raw'] = compat
 
             if filename := frec.get('filename'):
@@ -1349,7 +1352,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
                     frec['filetype'] = ext
 
                     if ext == 'vmod':
-                        pkg = try_extract_package(filename)
+                        pkg = sec or try_extract_package(filename)
                     else:
                         pkg = 'Files'
                 else:
