@@ -528,7 +528,8 @@ def apply_fixups(conn):
             ('"The Aragón Front"', 'Aragón Front, The'),
             ("'65: Squad-Level Combat in the Jungles of Vietnam", '65: Squad-Level Combat in the Jungles of Vietnam'),
             ("'CA' Tactical Naval Warfare in the Pacific, 1941-45", 'CA Tactical Naval Warfare in the Pacific, 1941-45'),
-            ('(Your Name Here) and the Argonauts', 'Your Name Here and the Argonauts')
+            ('(Your Name Here) and the Argonauts', 'Your Name Here and the Argonauts'),
+            ("'Wacht am Rhein': The Battle of the Bulge, 16 Dec 44-2 Jan 45", 'Wacht am Rhein: The Battle of the Bulge, 16 Dec 44-2 Jan 45')
         ]
 
         for sf in sort_fixup:
