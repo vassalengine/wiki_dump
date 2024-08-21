@@ -1372,7 +1372,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
 
             if fpub:
                 frec['published_by'] = add_or_get_user(conn, (None, fpub))
-                file_publishers.append(fpub)
+                file_publishers.append((None, fpub))
 
             fid = do_insert(conn, 'files_w', 'file_id', frec)
 
