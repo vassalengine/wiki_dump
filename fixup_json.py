@@ -41,21 +41,52 @@ def wacht_am_rhein(p):
 
 
 fixups = {
+    # 0-9
     '13 Dead End Drive': x13_dead_end_drive,
     '1914': collapse_pkgs,
     '1936: Guerra Civil': collapse_pkgs,
     '300: Earth & Water': collapse_pkgs, 
+
+    # A
     'A las Barricadas! (2nd Edition)': collapse_pkgs,
     'Aces of Valor': collapse_pkgs,
     'Across Suez': collapse_pkgs,
     'Age of Dogfights: WW1': collapse_pkgs,
     'Age of Muskets Volume I: Tomb for an Empire': collapse_pkgs,
+    'Air Superiority': collapse_pkgs,
+    'Airborne in My Pocket': collapse_pkgs,
+    'Alien Frontiers': collapse_pkgs,
+    'All Things Zombie: The Boardgame': collapse_pkgs,
+    'Ancient Civilizations of the Inner Sea': collapse_pkgs,
+    'Andean Abyss': collapse_pkgs,
+    'Arcole 1796': collapse_pkgs,
+    'Ardennes II': collapse_pkgs,
+    'Arena: Roma II': collapse_pkgs,
+    'Arracourt': collapse_pkgs,
+    'The Ardennes Offensive: The Battle of the Bulge, December 1944': collapse_pkgs,
+    'Ashes: Rise of the Phoenixborn': collapse_pkgs,
+    'Atlanta': collapse_pkgs,
+    'Attack Sub': collapse_pkgs,
+    'Austerlitz': collapse_pkgs,
+    'Austerlitz 1805': collapse_pkgs,
+    'Axis & Allies': collapse_pkgs,
+    'Axis & Allies Naval Miniatures: War at Sea': collapse_pkgs,
+
+    # B
+    'Balkan Front': collapse_pkgs,
+    'Band of Brothers': collapse_pkgs,
+
+    # W
     "Wacht am Rhein': The Battle of the Bulge, 16 Dec 44-2 Jan 45": wacht_am_rhein, 
     'War At Sea': collapse_pkgs,
     'The War At Sea (first edition)': collapse_pkgs,
     'WARLINE: Maneuver Strategy & Tactics': collapse_pkgs,
+
+    # Y
     'Ye Gods!': collapse_pkgs,
     'Yggdrasil': yggdrasil,
+
+    # Z
     'Zürich 1799': collapse_pkgs
 }
 
