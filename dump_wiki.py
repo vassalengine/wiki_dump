@@ -61,10 +61,10 @@ def parse_email(v):
     if not x[0] and not x[1]:
        return None
 
-    if x[0] == 'someguy@example.com':
+    if x[0] and (x[0].endswith('@example.com') or x[0].endswith('@example.net')):
         return None
 
-    if not x[0] and x[1] == 'unknown':
+    if not x[0] and x[1] and x[1].lower() == 'unknown':
         return None
 
     return x
@@ -81,7 +81,7 @@ def parse_emails(v):
             if x := parse_email(s):
                 emails.append(x)
 
-        elif s:
+        elif s and s.lower() != 'unknown':
             emails.append((None, s))
 
     return emails
