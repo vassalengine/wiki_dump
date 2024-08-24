@@ -22,6 +22,14 @@ def x13_dead_end_drive(p):
     }
 
 
+def apuren_el(p):
+    p['title'] = '¡' + p['title']
+
+
+def arriba_espana(p):
+    p['title'] = '¡Arriba España!'
+
+
 def yggdrasil(p):
     p['modules']['Dark Eclipse'] += p['modules'].pop('Dark Eclipse v2.0')
 
@@ -59,11 +67,13 @@ fixups = {
     'All Things Zombie: The Boardgame': collapse_pkgs,
     'Ancient Civilizations of the Inner Sea': collapse_pkgs,
     'Andean Abyss': collapse_pkgs,
+    'Apuren el corralito!: The 2nd Battle of Alihuatá, December 1933': apuren_el,
     'Arcole 1796': collapse_pkgs,
     'Ardennes II': collapse_pkgs,
+    'The Ardennes Offensive: The Battle of the Bulge, December 1944': collapse_pkgs,
     'Arena: Roma II': collapse_pkgs,
     'Arracourt': collapse_pkgs,
-    'The Ardennes Offensive: The Battle of the Bulge, December 1944': collapse_pkgs,
+    'Arriba Espana!': arriba_espana,
     'Ashes: Rise of the Phoenixborn': collapse_pkgs,
     'Atlanta': collapse_pkgs,
     'Attack Sub': collapse_pkgs,
