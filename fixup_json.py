@@ -86,6 +86,14 @@ fixups = {
     'Balkan Front': collapse_pkgs,
     'Band of Brothers': collapse_pkgs,
 
+    # U
+    'UND1C1': collapse_pkgs,
+    'Utopia Engine': collapse_pkgs,
+
+    # V
+    'Valor and Victory': collapse_pkgs,
+    'Victory in Vietnam': collapse_pkgs,
+
     # W
     "Wacht am Rhein': The Battle of the Bulge, 16 Dec 44-2 Jan 45": wacht_am_rhein, 
     'War At Sea': collapse_pkgs,
