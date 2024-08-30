@@ -264,18 +264,6 @@ WHERE email IS NULL
         ''')
 
 
-def try_extract_package(filename):
-    filename = ext_re.sub('', filename)
-
-    if vu := ver_re.search(filename):
-        # check that we haven't matched the whole filename
-        if vu.start(0) > 0:
-            return filename[:vu.start(0)].rstrip(" _-")
-
-# TODO: these are probably not great package names
-    return filename
-
-
 def try_semver(version):
     try:
         return semver.Version.parse(version)
@@ -1310,7 +1298,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
 
     for sec, mods in p.get('modules', {}).items():
         # if sec is a version, dump everything into the common package
-        if sec != title and try_parse_version(sec) is not None:
+        if sec == title or try_parse_version(sec) is not None:
             sec = None
 
         for mod in mods:
@@ -1352,7 +1340,7 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
                     frec['filetype'] = ext
 
                     if ext == 'vmod':
-                        pkg = sec or try_extract_package(filename)
+                        pkg = sec or 'Module'
                     else:
                         pkg = 'Files'
                 else:
