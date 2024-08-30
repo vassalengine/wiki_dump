@@ -22,12 +22,24 @@ def x13_dead_end_drive(p):
     }
 
 
+def x1914_glorys_end(p):
+     p['modules'] = {
+        "Glory's End": p['modules']["1.0 Glory's End"],
+        'When Eagles Fight': p['modules']['1.0 When Eagles Fight']
+    }
+
+
 def apuren_el(p):
     p['title'] = '¡' + p['title']
 
 
 def arriba_espana(p):
     p['title'] = '¡Arriba España!'
+
+
+def assault_of_the_dead(p):
+    p['modules']['Alternate Version'] = p['modules']['1.0 Alternate Version']
+    del  p['modules']['1.0 Alternate Version']
 
 
 def yggdrasil(p):
@@ -52,7 +64,9 @@ fixups = {
     # 0-9
     '13 Dead End Drive': x13_dead_end_drive,
     '1914': collapse_pkgs,
+    "1914: Glory's End / When Eagles Fight": x1914_glorys_end,
     '1936: Guerra Civil': collapse_pkgs,
+    '1985: Under an Iron Sky': collapse_pkgs,
     '300: Earth & Water': collapse_pkgs, 
 
     # A
@@ -61,6 +75,7 @@ fixups = {
     'Across Suez': collapse_pkgs,
     'Age of Dogfights: WW1': collapse_pkgs,
     'Age of Muskets Volume I: Tomb for an Empire': collapse_pkgs,
+    'Aegean Strike': collapse_pkgs,
     'Air Superiority': collapse_pkgs,
     'Airborne in My Pocket': collapse_pkgs,
     'Alien Frontiers': collapse_pkgs,
@@ -75,6 +90,7 @@ fixups = {
     'Arracourt': collapse_pkgs,
     'Arriba Espana!': arriba_espana,
     'Ashes: Rise of the Phoenixborn': collapse_pkgs,
+    'Assault of the Dead: Tactics': assault_of_the_dead,
     'Atlanta': collapse_pkgs,
     'Attack Sub': collapse_pkgs,
     'Austerlitz': collapse_pkgs,
@@ -85,6 +101,7 @@ fixups = {
     # B
     'Balkan Front': collapse_pkgs,
     'Band of Brothers': collapse_pkgs,
+    'BAOR': collapse_pkgs,
 
     # U
     'UND1C1': collapse_pkgs,
