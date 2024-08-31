@@ -513,6 +513,8 @@ def apply_fixups(conn):
 
         # fix sort keys
         sort_fixup = [
+            ('¡Apuren el corralito!: The 2nd Battle of Alihuatá, December 1933', 'Apuren el corralito: The 2nd Battle of Alihuatá, December 1933'),
+            ('¡Arriba España!', 'Arriba España'),
             ('"The Aragón Front"', 'Aragón Front, The'),
             ("'65: Squad-Level Combat in the Jungles of Vietnam", '65: Squad-Level Combat in the Jungles of Vietnam'),
             ("'CA' Tactical Naval Warfare in the Pacific, 1941-45", 'CA Tactical Naval Warfare in the Pacific, 1941-45'),
