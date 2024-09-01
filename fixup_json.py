@@ -105,6 +105,7 @@ fixups = {
 
     # U
     'UND1C1': collapse_pkgs,
+    'Universe Risk': collapse_pkgs,
     'Utopia Engine': collapse_pkgs,
 
     # V
