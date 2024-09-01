@@ -122,6 +122,7 @@ fixups = {
     'Yggdrasil': yggdrasil,
 
     # Z
+    'Zeppelin Raider': collapse_pkgs,
     'Zürich 1799': collapse_pkgs
 }
 
