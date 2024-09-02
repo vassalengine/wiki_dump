@@ -42,6 +42,16 @@ def assault_of_the_dead(p):
     del  p['modules']['1.0 Alternate Version']
 
 
+def battle_of_corinth(p):
+    jatc = p['modules']['Jackson at the Crossroads, v 1.0']
+    del p['modules']['Jackson at the Crossroads, v 1.0']
+
+    p['modules'] = {
+        'Jackson at the Crossroads': jatc,
+        'Corinth': [ m for v in p['modules'].values() for m in v ]
+    }
+
+
 def yggdrasil(p):
     p['modules']['Dark Eclipse'] += p['modules'].pop('Dark Eclipse v2.0')
 
@@ -102,6 +112,7 @@ fixups = {
     'Balkan Front': collapse_pkgs,
     'Band of Brothers': collapse_pkgs,
     'BAOR': collapse_pkgs,
+    'The Battle of Corinth: Standoff at the Tennessee, October 3-4, 1862': battle_of_corinth,
 
     # U
     'UND1C1': collapse_pkgs,
