@@ -113,6 +113,7 @@ fixups = {
     'Band of Brothers': collapse_pkgs,
     'BAOR': collapse_pkgs,
     'The Battle of Corinth: Standoff at the Tennessee, October 3-4, 1862': battle_of_corinth,
+    'The Blitzkrieg Legend: The Battle for France, 1940': collapse_pkgs,
 
     # U
     'UND1C1': collapse_pkgs,
