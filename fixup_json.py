@@ -117,6 +117,7 @@ fixups = {
 
     # C
     'The Caucasus Campaign: The Russo-German War in the Caucasus, 1942': collapse_pkgs,
+    'Crossing the Line: Aachen 1944': collapse_pkgs,
 
     # U
     'UND1C1': collapse_pkgs,
