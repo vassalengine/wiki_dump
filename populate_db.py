@@ -1030,16 +1030,25 @@ def lookup_user(c, u):
 bad_username_re = re.compile('[^a-zA-Z0-9._-]')
 
 
-user_map = {
+email_map = {
     'dulgin@arcor.de': 'iberkenkamp-darnedde@arcor.de',
     'shadowagl@126.com': 'shadowbbs@126.com',
     'gaetbe@gmail.com': 'gaetbe@yahoo.fr'
 }
 
+user_map = {
+    'Bugggg': 'mrbug',
+    'Peter Dietrich': 'pdietrich2',
+    'Pdietrich': 'pdietrich2'
+}
+
 
 def add_or_get_user(conn, u):
-    if sub := user_map.get(u[0], None):
+    if sub := email_map.get(u[0], None):
         u = (sub, u[1])
+
+    if sub := user_map.get(u[1], None):
+        u = (u[0], sub)
 
     c = conn.cursor()
 
