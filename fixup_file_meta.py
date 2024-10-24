@@ -79,7 +79,7 @@ version_fixups = {
 #    '5/54/AFK-2.3.1.vmod': (0, 2, 3, , None),
 #    '5/56/Iran_Irak_V1.2_Fr.vmod': (1, 2, 0, a, None),
     '5/57/Case_Blue_1.1.vmod': (1, 1, 0, None, None),
-    '5/57/TK2_2_00.vmod TK2_2_00.vmod': (2, 0, 0, None, None),
+    '5/57/TK2_2_00.vmod': (2, 0, 0, None, None),
     '5/58/Db_FrenchGivorsClub_3_0_1.vmod': (3, 0, 1, None, None),
 #    '5/59/Arkwright_v1.0.3DE.vmod': (1, 0, 3, DE, None),
 #    '5/5a/M3E-Malifaux_Burns-v3.vmod': (3, 0, 0, eMalifauxBurnsV3, None),
