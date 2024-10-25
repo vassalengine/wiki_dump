@@ -153,14 +153,14 @@ async def fixup_page(path):
     print(path)
 
     with open(path, 'r') as f:
-        p = json.load(f)
+        p = json.loads(f.read().replace('\\u200e', ''))
 
     fixup = fixups.get(p['title'], None)
     if fixup is not None:
         fixup(p)
 
-        with open(path, 'w') as f:
-            json.dump(p, f, indent=2)
+    with open(path, 'w') as f:
+        json.dump(p, f, indent=2)
 
 
 async def run():
