@@ -1479,7 +1479,7 @@ async def process_json_async(conn, files, file_ctimes, filename, num):
 
 
 async def run():
-    fpath = 'data/files.json'
+    fpath = 'data/files_fixed.json'
     upath = 'data/users.json'
     vpath = 'data/file_meta'
     wpath = 'data/pagejson_fixed'
