@@ -1040,7 +1040,9 @@ user_map = {
     'Bugggg': 'mrbug',
     'Peter Dietrich': 'pdietrich2',
     'Pdietrich': 'pdietrich2',
-    'Greg Amos': 'Teufelhunde'
+    'Greg Amos': 'Teufelhunde',
+    'Monsieur Poulet': 'MonsieurPoulet',
+    'Bruce Mansfield': 'bcmansfield',
 }
 
 
