@@ -66,6 +66,20 @@ user_fixups = {
     "File:Strategos 0 2.vmod": 'IrishBouzouki',
     "File:Succession Wars1.01.vmod": 'Skorpio',
     "File:BattleForNormandy 2.vmod": 'Joel_Toppen',
+    "File:Multi.vmod": 'Thorndraco',
+    "File:End of Empire v1 3.vmod": 'Tswider2',
+    "File:Epic 0 2.vmod": 'Austerity',
+    "File:Project Discovery.vmod": 'Srmansfield',
+    "File:BSG Pyramid.vmod": 'Soft-bug',
+    "File:OdiseaEspacial.vmod": 'Yuyu',
+    "File:Dealer McDope 1.0 .vmod": 'burdick.ip.research',
+    "File:Overthetop 0.12.vmod": 'Josh_Laverty',
+    "File:Overthetop 0.11.zip": 'Josh_Laverty',
+    "File:Over the top rules v011.pdf": 'Josh_Laverty',
+    "File:Revolutionary Road B2C R1.01.vmod": 'Jardic',
+    "File:The Rum Run-0.1.vmod": 'Alex_Coulombe',
+    "File:Starvation Island Ver1.vmod": 'Mark_Evans',
+    "File:Sticks and Stones.vmod": 'Xavier',
 }
 
 
