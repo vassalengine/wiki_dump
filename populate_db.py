@@ -1033,7 +1033,8 @@ bad_username_re = re.compile('[^a-zA-Z0-9._-]')
 email_map = {
     'dulgin@arcor.de': 'iberkenkamp-darnedde@arcor.de',
     'shadowagl@126.com': 'shadowbbs@126.com',
-    'gaetbe@gmail.com': 'gaetbe@yahoo.fr'
+    'gaetbe@gmail.com': 'gaetbe@yahoo.fr',
+    'rlee50@sc.rr.com': 'richz99ral@yahoo.com',
 }
 
 user_map = {
@@ -1043,6 +1044,15 @@ user_map = {
     'Greg Amos': 'Teufelhunde',
     'Monsieur Poulet': 'MonsieurPoulet',
     'Bruce Mansfield': 'bcmansfield',
+    'Caesar78': 'alecrespi',
+    'Giacomo': 'Giacomo_Rossi',
+    'Novasuecia': 'Nicholas_Hjelmberg',
+    'Cemoreno': 'CesarM',
+    'Vance Strickland': 'barthheart',
+    'David L. Jones': 'TheLockers',
+    'Mathias Daval': 'cyberlp23',
+    'rlee50': 'Richz99',
+    'Jonathan Burdick': 'burdick.ip.research',
 }
 
 
