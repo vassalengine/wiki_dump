@@ -247,6 +247,18 @@ def remove_cruft(page):
             pass
 
 
+def replace_email(page):
+    ei = page.filter_templates(matches=lambda n: n.name == 'email')
+    for e in ei:
+        addr = e.get('1')
+        name = e.get('2')
+        tag = mwparserfromhell.nodes.external_link.ExternalLink(
+            f"mailto:{addr}",
+            title=name
+        )
+        page.replace(e, tag)
+
+
 async def parse_page(inpath, outpath, ctimes):
     with open(inpath, 'r') as infile:
         p = json.load(infile)['parse']
@@ -275,6 +287,7 @@ async def parse_page(inpath, outpath, ctimes):
 
     remove_cruft(t)
     remove_headings(t)
+    replace_email(t)
 
     page = {
         'title': title,
