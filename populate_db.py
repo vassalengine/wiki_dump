@@ -1043,7 +1043,7 @@ user_map = {
     'Peter Dietrich': 'pdietrich2',
     'Pdietrich': 'pdietrich2',
     'Greg Amos': 'Teufelhunde',
-    'Monsieur Poulet': 'MonsieurPoulet',
+    'Monsieur_Poulet': 'MonsieurPoulet',
     'Bruce Mansfield': 'bcmansfield',
     'Caesar78': 'alecrespi',
     'Giacomo': 'Giacomo_Rossi',

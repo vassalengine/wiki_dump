@@ -93,6 +93,7 @@ user_fixups = {
     "File:Burma V1.33.vmod": 'Jeux12sl',
     "File:Burma v1 31.vmod": 'Jeux12sl',
     "File:Burma v1 2.vmod": 'Kishel',
+    "File:Royal Tank Corp v1.vmod": 'Dirk_Heinz',
 }
 
 
