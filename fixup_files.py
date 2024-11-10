@@ -83,6 +83,16 @@ user_fixups = {
     "File:TarotGame.vmod": 'Tarotgames',
     "File:Carcassonne-2.0.vmod": 'ColtsFan76',
     "File:Carcassonne-Simple.vmod": 'Sultan',
+    "File:GhostStories 118.vmod": 'Waddball',
+    "File:GhostStories 117.vmod": 'Waddball',
+    "File:Thunder at Cassino 1.2.vmod": 'Kaiman',
+    "File:Thunder at Cassino.pdf": 'Kaiman',
+    "File:Thunder at Cassino .vmod": 'Kaiman',
+    "File:Victory v0.7.vmod": 'Stailinn',
+    "File:Burma v1 34.vmod": 'DaveyJones',
+    "File:Burma V1.33.vmod": 'Jeux12sl',
+    "File:Burma v1 31.vmod": 'Jeux12sl',
+    "File:Burma v1 2.vmod": 'Kishel',
 }
 
 
