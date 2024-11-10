@@ -80,6 +80,9 @@ user_fixups = {
     "File:The Rum Run-0.1.vmod": 'Alex_Coulombe',
     "File:Starvation Island Ver1.vmod": 'Mark_Evans',
     "File:Sticks and Stones.vmod": 'Xavier',
+    "File:TarotGame.vmod": 'Tarotgames',
+    "File:Carcassonne-2.0.vmod": 'ColtsFan76',
+    "File:Carcassonne-Simple.vmod": 'Sultan',
 }
 
 

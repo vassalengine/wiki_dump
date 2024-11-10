@@ -1035,6 +1035,7 @@ email_map = {
     'shadowagl@126.com': 'shadowbbs@126.com',
     'gaetbe@gmail.com': 'gaetbe@yahoo.fr',
     'rlee50@sc.rr.com': 'richz99ral@yahoo.com',
+    'placeholder+monsieur_poulet@vassal.org': 'mbelanger@iname.com',
 }
 
 user_map = {
