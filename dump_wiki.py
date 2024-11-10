@@ -259,6 +259,18 @@ def replace_email(page):
         page.replace(e, tag)
 
 
+def remove_div_boxes(page):
+    boxes = page.filter_tags(matches=lambda n: n.tag == 'div')
+    for b in boxes:
+        page.replace(b, b.contents)
+
+
+def remove_important_boxes(page):
+    boxes = page.filter_templates(matches=lambda n: n.name.lower() == 'important')
+    for b in boxes:
+        page.replace(b, b.get('1'))
+
+
 async def parse_page(inpath, outpath, ctimes):
     with open(inpath, 'r') as infile:
         p = json.load(infile)['parse']
@@ -277,6 +289,7 @@ async def parse_page(inpath, outpath, ctimes):
 
     ns_title = p['title']
     title = ns_title.removeprefix('Module:')
+
     t = mwparserfromhell.parse(wikitext)
 
     ginfo = parse_game_info(t)
@@ -288,6 +301,8 @@ async def parse_page(inpath, outpath, ctimes):
     remove_cruft(t)
     remove_headings(t)
     replace_email(t)
+    remove_div_boxes(t)
+    remove_important_boxes(t)
 
     page = {
         'title': title,
