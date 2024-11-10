@@ -248,8 +248,8 @@ def remove_cruft(page):
 
 
 def replace_email(page):
-    ei = page.filter_templates(matches=lambda n: n.name == 'email')
-    for e in ei:
+    el = page.filter_templates(matches=lambda n: n.name == 'email')
+    for e in el:
         addr = e.get('1')
         name = e.get('2')
         tag = mwparserfromhell.nodes.external_link.ExternalLink(
