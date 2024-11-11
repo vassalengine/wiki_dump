@@ -1054,6 +1054,10 @@ user_map = {
     'Mathias Daval': 'cyberlp23',
     'rlee50': 'Richz99',
     'Jonathan Burdick': 'burdick.ip.research',
+    'Tim Craire': 'easyalias',
+    'bgg rattle': 'rattle',
+    'Edgar Gallego': 'Edgar',
+    'Jim Perkinson': 'LeLechuck',
 }
 
 

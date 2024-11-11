@@ -87,13 +87,17 @@ user_fixups = {
     "File:GhostStories 117.vmod": 'Waddball',
     "File:Thunder at Cassino 1.2.vmod": 'Kaiman',
     "File:Thunder at Cassino.pdf": 'Kaiman',
-    "File:Thunder at Cassino .vmod": 'Kaiman',
+    "File:Thunder at Cassino.vmod": 'Kaiman',
     "File:Victory v0.7.vmod": 'Stailinn',
     "File:Burma v1 34.vmod": 'DaveyJones',
     "File:Burma V1.33.vmod": 'Jeux12sl',
     "File:Burma v1 31.vmod": 'Jeux12sl',
     "File:Burma v1 2.vmod": 'Kishel',
     "File:Royal Tank Corp v1.vmod": 'Dirk_Heinz',
+    "File:GBoH-Chandragupta 2.0.vmod": 'Alfonso',
+    "File:Circus1.2.vmod": 'Skalla',
+    "File:Mesopotamia v1 01.vmod": 'Rwein',
+    "File:Silentdeath OD 1.02.vmod": 'Dave_Faucher',
 }
 
 
