@@ -39,7 +39,7 @@ def arriba_espana(p):
 
 def assault_of_the_dead(p):
     p['modules']['Alternate Version'] = p['modules']['1.0 Alternate Version']
-    del  p['modules']['1.0 Alternate Version']
+    del p['modules']['1.0 Alternate Version']
 
 
 def battle_of_corinth(p):
