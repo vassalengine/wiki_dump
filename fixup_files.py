@@ -98,6 +98,12 @@ user_fixups = {
     "File:Circus1.2.vmod": 'Skalla',
     "File:Mesopotamia v1 01.vmod": 'Rwein',
     "File:Silentdeath OD 1.02.vmod": 'Dave_Faucher',
+    "File:Urrah!v13.vmod": 'Yangtze',
+    "File:Vampires Dance.vmod": 'Soft-bug',
+    "File:Wolf.vmod": 'Gaetbe',
+    "File:YKv2.vmod": 'Kishel',
+    "File:YKv2 1.vmod": 'Kishel',
+    "File:Zimp.vmod": 'Soft-bug',
 }
 
 

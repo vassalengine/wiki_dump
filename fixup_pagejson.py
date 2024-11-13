@@ -56,6 +56,15 @@ def euridice_orpheus(p):
     p['info']['image'] = ''
 
 
+def ukraine_43(p):
+    two_ed1 = p['modules']['2nd Edition v1.01']
+    two_ed2 = p['modules']['2nd Edition v1.02']
+    del p['modules']['2nd Edition v1.01']
+    del p['modules']['2nd Edition v1.02']
+
+    p['modules']['2nd Edition'] = [ *two_ed1, *two_ed2 ]
+
+
 def yggdrasil(p):
     p['modules']['Dark Eclipse'] += p['modules'].pop('Dark Eclipse v2.0')
 
@@ -127,6 +136,7 @@ fixups = {
     'Eurydice & Orpheus': euridice_orpheus,
 
     # U
+    "Ukraine '43": ukraine_43,
     'UND1C1': collapse_pkgs,
     'Universe Risk': collapse_pkgs,
     'Utopia Engine': collapse_pkgs,

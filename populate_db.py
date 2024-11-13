@@ -1058,6 +1058,7 @@ user_map = {
     'bgg rattle': 'rattle',
     'Edgar Gallego': 'Edgar',
     'Jim Perkinson': 'LeLechuck',
+    'John Edwards': 'jzedward',
 }
 
 
