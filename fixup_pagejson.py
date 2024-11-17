@@ -135,6 +135,9 @@ fixups = {
     # E
     'Eurydice & Orpheus': euridice_orpheus,
 
+    # R
+    'Ruse & Bruise': collapse_pkgs,
+
     # U
     "Ukraine '43": ukraine_43,
     'UND1C1': collapse_pkgs,

@@ -1036,6 +1036,7 @@ email_map = {
     'gaetbe@gmail.com': 'gaetbe@yahoo.fr',
     'rlee50@sc.rr.com': 'richz99ral@yahoo.com',
     'placeholder+monsieur_poulet@vassal.org': 'mbelanger@iname.com',
+    'placeholder+dave_deitch@vassal.org': 'davenet@comcast.net',
 }
 
 user_map = {
@@ -1051,6 +1052,7 @@ user_map = {
     'Cemoreno': 'CesarM',
     'Vance Strickland': 'barthheart',
     'David L. Jones': 'TheLockers',
+    'Dave Jones': 'TheLockers',
     'Mathias Daval': 'cyberlp23',
     'rlee50': 'Richz99',
     'Jonathan Burdick': 'burdick.ip.research',
@@ -1059,6 +1061,11 @@ user_map = {
     'Edgar Gallego': 'Edgar',
     'Jim Perkinson': 'LeLechuck',
     'John Edwards': 'jzedward',
+    'Dave Deitch': 'Wolff589',
+    'dave deitch': 'Wolff589',
+    'Elliott Miles McKinley': 'eman1969',
+    'Silvio Melo': 'Segmelo',
+    'Phillip Weltsch': 'phil398',
 }
 
 
