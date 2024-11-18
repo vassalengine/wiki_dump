@@ -126,6 +126,7 @@ version_fixups = {
 #    '8/83/1775_Rebellion_Module_Fixed_1.00.vmod': (0, 90, 0, , None),
     '8/83/Acta_2e_v1.2.vmod': (1, 2, 0, None, None),
 #    '8/85/PW2_v104.vmod': (2, 1, 4, , None),
+    '8/85/Trader.vmod': (1, 0, 0, None, None),
     '8/87/TheOtherSide2.1_BTOS.vmod': (2, 1, 0, None, None),
 #    '8/88/NWTaiwan1_0_Revised.vmod': (1, 0, 0, Revised, None),
     '8/89/Napoleons_Triumph_v0.81-no-teams.vmod': (0, 81, 0, None, None),
