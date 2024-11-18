@@ -181,6 +181,7 @@ version_fixups = {
 #    'c/c8/UKC_v1.21_FOW.vmod': (1, 21, 0, FOW, None),
     'c/ca/Our_Place_in_the_Sun-2.3c.vmod': (2, 3, 0, 'c', None),
 #    'c/cb/Cards_against_humanity_custom.vmod': (1, 0, 0, Custom, None),
+    'c/cd/22pommes.vmod': (1, 0, 0, None, None),
 #    'd/d2/Outreach_v1_2.vmod': (3, 2, 0, p7, None),
 #    'd/d3/Aw-spi-v1-81A.vmod': (1, 81, 0, AwithAltMapD, None),
 #    'd/d3/PW2_v105.vmod': (2, 1, 5, , None),

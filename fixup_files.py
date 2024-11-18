@@ -157,6 +157,7 @@ user_fixups = {
     "File:Cape & Epee.vmod": 'Gaetbe',
     "File:Trader.vmod": 'Gaetbe',
     "File:Chabyrinthe.vmod": 'Gaetbe',
+    "File:Senet.vmod": 'Yuyu',
 }
 
 
