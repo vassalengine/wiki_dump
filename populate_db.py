@@ -7,7 +7,6 @@ import os.path
 import re
 import sqlite3
 import unicodedata
-import urllib.parse
 
 import dateutil.parser
 import pypandoc
@@ -380,10 +379,6 @@ def populate_versions(conn, vpath):
                 size = d['size']
                 sha256 = d['sha256']
                 version = d['version']
-
-                rest, filename = url.rsplit('/', maxsplit=1)
-                filename = urllib.parse.quote(filename)
-                url = f"{rest}/{filename}"
 
                 if v := d.get('version_parsed', None):
                     v = semver.Version(major=v[0], minor=v[1], patch=v[2], prerelease=v[3], build=v[4])
