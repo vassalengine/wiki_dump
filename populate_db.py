@@ -1469,6 +1469,8 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
                 owners = possible_contribs
                 if not owners:
                     owners = file_publishers
+                    if not owners:
+                        owners = [('placeholder+nobody@vassal.org', 'nobody')]
 
     for e in owners:
         do_insert_users(conn, 'owners_w', 'project_id', e, num)
