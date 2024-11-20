@@ -158,6 +158,7 @@ user_fixups = {
     "File:Trader.vmod": 'Gaetbe',
     "File:Chabyrinthe.vmod": 'Gaetbe',
     "File:Senet.vmod": 'Yuyu',
+    "File:Admiralty.vmod": 'Ichibrothers',
 }
 
 
