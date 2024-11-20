@@ -290,36 +290,40 @@ async def parse_page(inpath, outpath, ctimes):
     ns_title = p['title']
     title = ns_title.removeprefix('Module:')
 
-    t = mwparserfromhell.parse(wikitext)
+    try:
+        t = mwparserfromhell.parse(wikitext)
 
-    ginfo = parse_game_info(t)
-    modules = parse_modules(t)
-    maintainer, contributors = parse_module_contact_info(t)
-    gallery = parse_gallery(t)
-    players = parse_players(t)
+        ginfo = parse_game_info(t)
+        modules = parse_modules(t)
+        maintainer, contributors = parse_module_contact_info(t)
+        gallery = parse_gallery(t)
+        players = parse_players(t)
 
-    remove_cruft(t)
-    remove_headings(t)
-    replace_email(t)
-    remove_div_boxes(t)
-    remove_important_boxes(t)
+        remove_cruft(t)
+        remove_headings(t)
+        replace_email(t)
+        remove_div_boxes(t)
+        remove_important_boxes(t)
 
-    page = {
-        'title': title,
-        'ctime': ctimes[ns_title],
-        'info': ginfo,
-        'maintainer': maintainer,
-        'contributors': contributors,
-        'modules': modules,
-        'gallery': gallery,
-        'players': players,
-        'readme': t.strip()
-    }
+        page = {
+            'title': title,
+            'ctime': ctimes[ns_title],
+            'info': ginfo,
+            'maintainer': maintainer,
+            'contributors': contributors,
+            'modules': modules,
+            'gallery': gallery,
+            'players': players,
+            'readme': t.strip()
+        }
 
-    with open(outpath, 'w') as outfile:
-        print(json.dumps(page, indent=2), file=outfile)
+        with open(outpath, 'w') as outfile:
+            print(json.dumps(page, indent=2), file=outfile)
 
-    print('.', end='', flush=True)
+        print('.', end='', flush=True)
+
+    except Exception as e:
+        raise RuntimeError(title) from e
 
 
 async def run():
