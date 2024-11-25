@@ -5,6 +5,10 @@ import shutil
 import os
 
 
+def no_box_image(p):
+    p['info']['image'] = ''
+
+
 def collapse_pkgs(p):
     mods = p['modules']
 
@@ -52,8 +56,14 @@ def battle_of_corinth(p):
     }
 
 
-def euridice_orpheus(p):
-    p['info']['image'] = ''
+def twin_peaks(p):
+    cm = [ m for v in p['modules'].values() for m in v if m['filename'].startswith('Cedar') ]
+    sm = [ m for v in p['modules'].values() for m in v if m['filename'].startswith('South') ]
+
+    p['modules'] = {
+        'Cedar Mountain': cm,
+        'South Mountain': sm
+    }
 
 
 def ukraine_43(p):
@@ -133,10 +143,17 @@ fixups = {
     'Crossing the Line: Aachen 1944': collapse_pkgs,
 
     # E
-    'Eurydice & Orpheus': euridice_orpheus,
+    'Eurydice & Orpheus': no_box_image,
+
+    # L
+    'The Lord of the Rings: The Card Game': collapse_pkgs,
 
     # R
     'Ruse & Bruise': collapse_pkgs,
+
+    # T
+    'TablaPeriodica': no_box_image,
+    'Twin Peaks': twin_peaks,
 
     # U
     "Ukraine '43": ukraine_43,
