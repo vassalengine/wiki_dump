@@ -298,8 +298,7 @@ fixups = {
     "Prussia's Glory II": prussias_glory_ii,
 
     # Q
-#    'Quatre Batailles en Espagne': quatre_batailles_en_espagne,
-
+    'Quatre Batailles en Espagne': quatre_batailles_en_espagne,
 
     # R
     'Return to the Rock: Corregidor, 1945': return_to_the_rock,

@@ -122,6 +122,7 @@ version_fixups = {
     '4/4a/Starmada.vmod': (1, 0, 0, None, None),
 #    '4/4b/M3E-Malifaux-v1d.vmod': (3, 0, 0, ev1d, None),
     '4/4b/Star_Fleet_Battle_Force_v.1.1_safe.vmod': (1, 1, 0, None, None),
+    '4/4c/Novi_1799_ver1.1.vmod': (1, 1, 0, None, None),
     '4/4c/Roads-to-Stalingrad_-_v_1-01.vmod': (1, 1, 0, None, None),
     '4/4c/Skies_above_the_Reich_v097.vmod': (0, 97, 0, 'BETA', None),
     '4/4d/BAR-Germantown_v101.vmod': (1, 0, 1, None, None),
