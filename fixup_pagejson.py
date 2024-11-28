@@ -338,11 +338,6 @@ fixups = {
     'Zürich 1799': collapse_pkgs
 }
 
-#            # map each package individually 
-#            for k, v in pmap.items():
-#                d = mods.setdefault(v, [])
-#                d += mods.pop(k)
-
 
 async def fixup_page(path):
     print(path)
