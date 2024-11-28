@@ -284,9 +284,6 @@ async def parse_page(inpath, outpath, ctimes):
     if 'Category:DeleteMe' in wikitext:
         return
 
-    if 'Category:Banned' in wikitext:
-        return
-
     ns_title = p['title']
     title = ns_title.removeprefix('Module:')
 
