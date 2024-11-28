@@ -1347,7 +1347,10 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
 
     # convert game image url to game image name
     if imgname := mrec.get('game_image'):
-        if url := get_url(imgname, file_meta):
+        if imgname == 'nia.jpg':
+            # "not available" image
+            mrec['game_image'] = ''
+        elif url := get_url(imgname, file_meta):
             mrec['game_image'] = normalize_filename(imgname)
 
             if irec := parse_screenshot_image(imgname, file_meta, file_ctimes):
