@@ -11,6 +11,7 @@ import unicodedata
 import dateutil.parser
 import pypandoc
 import semver
+import urllib.parse
 
 
 def make_cols_vals(rec):
@@ -1133,11 +1134,13 @@ def add_or_get_user(conn, u):
 
 
 def normalize_filename(filename):
+    filename = urllib.parse.unquote(filename)
     filename = filename.replace(' ', '_')
     return filename[0].capitalize() + filename[1:]
 
 
 def fname_for_meta(filename):
+    filename = urllib.parse.unquote(filename)
     filename = filename.replace('_', ' ')
     filename = filename[0].capitalize() + filename[1:]
     return f"File:{filename}"
@@ -1165,7 +1168,9 @@ def parse_screenshot_image(filename, file_meta, file_ctimes):
         if filename.startswith("[[") and filename.endswith("]]"):
             filename = filename[2:-2]
 
-        filename = filename.lstrip().split('|')[0].replace('%20', ' ').rstrip()
+#        filename = filename.lstrip().split('|')[0].replace('%20', ' ').rstrip()
+        filename = filename.lstrip().split('|')[0]
+        filename = urllib.parse.unquote(filename).rstrip()
         filename = image_prefix_re.sub('', filename)
 
         if filename:
