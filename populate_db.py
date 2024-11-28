@@ -1325,6 +1325,10 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
 ```""", '')
     readme = readme.replace("<!-- -->\n", '')
 
+    # replace strikethrough HTML with markdown
+    readme = readme.replace('<s>', '~~').replace('</s>', '~~')
+    readme = readme.replace('<strike>', '~~').replace('</strike>', '~~')
+
     mrec = {
         'game_title': title,
         'game_title_sort_key': title_sort_key(title),
