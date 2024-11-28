@@ -225,6 +225,14 @@ user_fixups = {
     "File:BtB ver2-01.vmod": 'Alexander331bc',
     "File:War of the suns v06.vmod": 'Brent_Easton',
     "File:War of the suns v05.vmod": 'Brent_Easton',
+    "File:SP II v12.vmod": 'Fgbelmon',
+    "File:Risk2210.vmod": 'Natural20',
+    "File:Struggle for Europe v2.1.vmod": 'Bsmith',
+    "File:Perryville19.vmod": 'GJK',
+    "File:Scenario 1.vsav": 'GJK',
+    "File:Readme.txt": 'GJK',
+    "File:Aireaters002.vmod": 'Jimu',
+    "File:Aireaters006.vmod": 'Jimu',
 }
 
 

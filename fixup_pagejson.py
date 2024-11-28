@@ -46,6 +46,22 @@ def assault_of_the_dead(p):
     del p['modules']['1.0 Alternate Version']
 
 
+def battles_for_the_shenandoah(p):
+    p['modules'] = {
+        '2nd Winchester': [ m for v in p['modules'].values() for m in v if 'Winchester' in m['filename'] ],
+        'Cool Spring': [ m for v in p['modules'].values() for m in v if 'Cool' in m['filename'] ],
+        'McDowell': [ m for v in p['modules'].values() for m in v if 'McDowell' in m['filename'] ],
+        'Piedmont': [ m for v in p['modules'].values() for m in v if 'Piedmont' in m['filename'] ]
+    }
+
+
+def battle_hymn_vol_1(p):
+    p['modules'] = {
+        'Gettysburg': [ m for v in p['modules'].values() for m in v if 'Gettysburg' in m['filename'] ],
+        'Pea Ridge': [ m for v in p['modules'].values() for m in v if 'Pea' in m['filename'] ]
+    }
+
+
 def battle_of_corinth(p):
     jatc = p['modules']['Jackson at the Crossroads, v 1.0']
     del p['modules']['Jackson at the Crossroads, v 1.0']
@@ -54,6 +70,110 @@ def battle_of_corinth(p):
         'Jackson at the Crossroads': jatc,
         'Corinth': [ m for v in p['modules'].values() for m in v ]
     }
+
+
+def blockade(p):
+    p['modules'] = {
+        'Blockade': [ m for v in p['modules'].values() for m in v if 'Duel' not in m['filename'] ],
+        'Blockade Duel': [ m for v in p['modules'].values() for m in v if 'Duel' in m['filename'] ]
+    }
+
+
+def bloody_steppes(p):
+    p['modules'] = {
+        'Alma': [ m for v in p['modules'].values() for m in v if 'Alma' in m['filename'] ],
+        'Balaclava': [ m for v in p['modules'].values() for m in v if 'Balaclava' in m['filename'] ],
+        'Inkerman': [ m for v in p['modules'].values() for m in v if 'Inkerman' in m['filename'] ]
+    }
+
+
+def brandywine_germantown(p):
+    p['modules'] = {
+        'Brandywine': [ m for v in p['modules'].values() for m in v if 'Brandywine' in m['filename'] ],
+        'Germantown': [ m for v in p['modules'].values() for m in v if 'Germantown' in m['filename'] ]
+    }
+
+
+def case_yellow(p):
+    p['modules'] = {
+        'Scenarios 1 and 2': [ m for v in p['modules'].values() for m in v if 'SC_1_2' in m['filename'] ],
+        'Scenario 3': [ m for v in p['modules'].values() for m in v if 'SC_3' in m['filename'] ]
+    }
+
+
+def crimean_war_battles(p):
+    p['modules'] = {
+        'Alma': [ m for v in p['modules'].values() for m in v if 'Alma' in m['filename'] ],
+        'Balaclava': [ m for v in p['modules'].values() for m in v if 'Balaclava' in m['filename'] ],
+        'Inkerman': [ m for v in p['modules'].values() for m in v if 'Inkerman' in m['filename'] ],
+        'Tchernaya River': [ m for v in p['modules'].values() for m in v if 'Tchernaya' in m['filename'] ]
+    }
+
+
+def epees_crois(p):
+    p['modules'] = {
+        'Ascalon': [ m for v in p['modules'].values() for m in v if 'Ascalon' in m['filename'] ],
+        'Dorylee': [ m for v in p['modules'].values() for m in v if 'Dorylee' in m['filename'] ]
+    }
+
+
+def epees_norm(p):
+    p['modules'] = {
+        'Hastings': [ m for v in p['modules'].values() for m in v if 'Hastings' in m['filename'] ],
+        'Vales Dunes': [ m for v in p['modules'].values() for m in v if 'ValesDunes' in m['filename'] ],
+        'Varaville': [ m for v in p['modules'].values() for m in v if 'Varaville' in m['filename'] ]
+    }
+
+
+def epees_souv(p):
+    p['modules'] = {
+        'Bouvines': [ m for v in p['modules'].values() for m in v if 'Bouvines' in m['filename'] ],
+        'Worrigen': [ m for v in p['modules'].values() for m in v if 'Worrigen' in m['filename'] ]
+    }
+
+
+def gospitch(p):
+    p['modules'] = {
+        'Gospitch': [ m for v in p['modules'].values() for m in v if 'Gospitch' in m['filename'] ],
+        'Ocaña': [ m for v in p['modules'].values() for m in v if 'Ocana' in m['filename'] ]
+    }
+
+
+def le_lion_et_lepee(p):
+    p['modules'] = {
+        'Arsouf': [ m for v in p['modules'].values() for m in v if 'Arsouf' in m['filename'] ],
+        'Tremithoussia': [ m for v in p['modules'].values() for m in v if 'Tremithoussia' in m['filename'] ]
+    }
+
+
+def ngbg(p):
+    p['modules'] = {
+        'Nyborg-Fehrbellin': [ m for v in p['modules'].values() for m in v if 'Nyborg' in m['filename'] ],
+        'Halmstad-Warksow': [ m for v in p['modules'].values() for m in v if 'Halmstad' in m['filename'] ],
+        'Lund': [ m for v in p['modules'].values() for m in v if 'Lund' in m['filename'] ],
+        'Landskrona': [ m for v in p['modules'].values() for m in v if 'Landskrona' in m['filename'] ],
+        'Malmoe': [ m for v in p['modules'].values() for m in v if 'Malmoe' in m['filename'] ]
+    }
+
+
+def prussias_glory_ii(p):
+    p['modules'] = {
+        'Krefeld': [ m for v in p['modules'].values() for m in v if 'Krefeld' in m['filename'] ],
+        'Prague': [ m for v in p['modules'].values() for m in v if 'Prague' in m['filename'] ]
+    }
+
+
+def quatre_batailles_en_espagne(p):
+    p['modules'] = {
+        'Ocana': p['modules']['1.0 Ocana'],
+        'Salamanque': p['modules']['1.0 Salamanque'],
+        'Vitoria': p['modules']['1.0 Vitoria'],
+        'Sorauren': p['modules']['1.0 Sorauren']
+    }
+
+
+def return_to_the_rock(p):
+    p['maintainer'] = [ [ None, "Airjudden" ] ]
 
 
 def twin_peaks(p):
@@ -130,26 +250,64 @@ fixups = {
     'Austerlitz 1805': collapse_pkgs,
     'Axis & Allies': collapse_pkgs,
     'Axis & Allies Naval Miniatures: War at Sea': collapse_pkgs,
+    'Axis & Allies Pacific: 1940 Edition': collapse_pkgs,
 
     # B
     'Balkan Front': collapse_pkgs,
     'Band of Brothers': collapse_pkgs,
     'BAOR': collapse_pkgs,
+    'Battle Hymn Vol.1: Gettysburg and Pea Ridge': battle_hymn_vol_1,
     'The Battle of Corinth: Standoff at the Tennessee, October 3-4, 1862': battle_of_corinth,
+    'Battles for the Shenadoah: A Death Valley Expansion': battles_for_the_shenandoah,
     'The Blitzkrieg Legend: The Battle for France, 1940': collapse_pkgs,
+    'Blockade': blockade,
+    'Bloody Steppes of Crimea: Alma - Balaclava - Inkerman 1854': bloody_steppes,
+    'Brandywine & Germantown': brandywine_germantown,
 
     # C
+    'Case Yellow, 1940: The German Blitzkrieg in the West': case_yellow,
     'The Caucasus Campaign: The Russo-German War in the Caucasus, 1942': collapse_pkgs,
+    'Crimean War Battles': crimean_war_battles,
     'Crossing the Line: Aachen 1944': collapse_pkgs,
 
     # E
+    'Epées et croisades': epees_crois,
+    'Epées Normandes': epees_norm,
+    'Epées souveraines : Bouvines 1214 - Worringen 1288': epees_souv,
     'Eurydice & Orpheus': no_box_image,
 
+    #
+    'Fields of Fire': collapse_pkgs,
+
+    # G
+    'Gospitch & Ocaña 1809': gospitch,
+
     # L
+    "Le Lion et l'Epée": le_lion_et_lepee,
     'The Lord of the Rings: The Card Game': collapse_pkgs,
 
+    # M
+    'Manassas': collapse_pkgs,
+
+    # N
+    'Neuroshima Hex!': collapse_pkgs,
+    'Normandy, The Beginning of the End': collapse_pkgs,
+    'Nothing Gained But Glory': ngbg,
+
+    # P
+    "Prussia's Glory II": prussias_glory_ii,
+
+    # Q
+#    'Quatre Batailles en Espagne': quatre_batailles_en_espagne,
+
+
     # R
+    'Return to the Rock: Corregidor, 1945': return_to_the_rock,
+    'Rommel (2017)': no_box_image,
     'Ruse & Bruise': collapse_pkgs,
+
+    # S
+    'Small World Underground': collapse_pkgs,
 
     # T
     'TablaPeriodica': no_box_image,
