@@ -1360,6 +1360,9 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
     readme = readme.replace('<s>', '~~').replace('</s>', '~~')
     readme = readme.replace('<strike>', '~~').replace('</strike>', '~~')
 
+    # replace code HTML with markdown
+    readme = readme.replace('<code>', '```\n').replace('</code>', '\n```')
+
     for i, img in enumerate(p['images']):
         irec = parse_screenshot_image(img[0], file_meta, file_ctimes)
         if irec:
