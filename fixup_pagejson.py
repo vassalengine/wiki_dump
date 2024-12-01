@@ -33,8 +33,40 @@ def x1914_glorys_end(p):
     }
 
 
+def a5a(p):
+    p['modules'] = {
+        'Gettysburg': [ m for v in p['modules'].values() for m in v if 'Gettysburg' in m['filename'] ],
+        '1st Bull Run': [ m for v in p['modules'].values() for m in v if 'Bull' in m['filename'] ],
+        'Shiloh': [ m for v in p['modules'].values() for m in v if 'Shiloh' in m['filename'] ],
+        'Pea Ridge': [ m for v in p['modules'].values() for m in v if 'Pea' in m['filename'] ],
+        'Bentonville': [ m for v in p['modules'].values() for m in v if 'Bentonville' in m['filename'] ],
+        'Rules': [ m for v in p['modules'].values() for m in v if 'pdf' in m['filename'] ]
+    }
+
+
 def apuren_el(p):
     p['title'] = '¡' + p['title']
+
+
+def ardennes_44(p):
+    p['modules'] = {
+        '3rd Edition': [ m for v in p['modules'].values() for m in v if '3rd' in m['filename'] ],
+        '2nd Edition': [ m for v in p['modules'].values() for m in v if '2ed' in m['filename'] or '2nd' in m['filename'] ],
+        '1st Edition': [ m for v in p['modules'].values() for m in v if '2ed' in m['filename'] or '2nd' in m['filename'] if '3rd' not in m['filename'] and '2nd' not in m['filename'] and '2ed' not in m['filename'] ]
+    }
+
+
+def arquebus(p):
+    p['modules'] = {
+        'Agnadello': [ m for v in p['modules'].values() for m in v if 'Agnadello' in m['filename'] ],
+        'Bicocca': [ m for v in p['modules'].values() for m in v if 'Bicocca' in m['filename'] ],
+        'Ceresole': [ m for v in p['modules'].values() for m in v if 'Ceresole' in m['filename'] ],
+        'Cerignola': [ m for v in p['modules'].values() for m in v if 'Cerignola' in m['filename'] ],
+        'Fornovo': [ m for v in p['modules'].values() for m in v if 'Fornovo' in m['filename'] ],
+        'Ravenna': [ m for v in p['modules'].values() for m in v if 'Ravenna' in m['filename'] ],
+        'Marignano': [ m for v in p['modules'].values() for m in v if 'Marignano' in m['filename'] ],
+        'Pavia': [ m for v in p['modules'].values() for m in v if 'Pavia' in m['filename'] ]
+    }
 
 
 def arriba_espana(p):
@@ -44,6 +76,14 @@ def arriba_espana(p):
 def assault_of_the_dead(p):
     p['modules']['Alternate Version'] = p['modules']['1.0 Alternate Version']
     del p['modules']['1.0 Alternate Version']
+
+
+def avec_infini_regret(p):
+    p['modules'] = {
+        'Battle of Coutras - October 20, 1587': [ m for v in p['modules'].values() for m in v if 'Coutras' in m['filename'] ],
+        'Battle of Dreux - December 19th, 1562': [ m for v in p['modules'].values() for m in v if 'Dreux' in m['filename'] ],
+        "Battle for La Roche-l' Abeille, 25th June 1569": [ m for v in p['modules'].values() for m in v if 'Roche' in m['filename'] ]
+    }
 
 
 def battles_for_the_shenandoah(p):
@@ -101,6 +141,13 @@ def case_yellow(p):
     }
 
 
+def cobra(p):
+    p['modules'] = {
+        'Cobra from S&T #64': [ m for v in p['modules'].values() for m in v if 'v04' in m['filename'] ],
+        'Cobra from S&T #251': [ m for v in p['modules'].values() for m in v if 'Cobra2' in m['filename'] ]
+    }
+
+
 def crimean_war_battles(p):
     p['modules'] = {
         'Alma': [ m for v in p['modules'].values() for m in v if 'Alma' in m['filename'] ],
@@ -139,6 +186,17 @@ def gospitch(p):
     }
 
 
+def highway_to_the_kremlin(p):
+    p['readme'] = p['readme'].removeprefix("''' File for this module version are hosted at [http://www.limeyyankgames.co.uk/ Limey Yank Games]'''\n\n\n\n\n\n\n\n\n\n\n\n")
+
+
+def a_house_divided(p):
+    p['modules'] = {
+        'GDW 1st Edition': [ m for v in p['modules'].values() for m in v if m['filename'].startswith('ahd_') ],
+        'Phalanx': [ m for v in p['modules'].values() for m in v if m['filename'].startswith('AHD') ]
+    }
+
+
 def le_lion_et_lepee(p):
     p['modules'] = {
         'Arsouf': [ m for v in p['modules'].values() for m in v if 'Arsouf' in m['filename'] ],
@@ -153,6 +211,13 @@ def ngbg(p):
         'Lund': [ m for v in p['modules'].values() for m in v if 'Lund' in m['filename'] ],
         'Landskrona': [ m for v in p['modules'].values() for m in v if 'Landskrona' in m['filename'] ],
         'Malmoe': [ m for v in p['modules'].values() for m in v if 'Malmoe' in m['filename'] ]
+    }
+
+
+def paris_vaut(p):
+    p['modules'] = {
+        'Dreux 1562': [ m for v in p['modules'].values() for m in v if 'Dreux' in m['filename'] ],
+        'Ivry 1590': [ m for v in p['modules'].values() for m in v if 'Ivry' in m['filename'] ]
     }
 
 
@@ -220,12 +285,13 @@ fixups = {
     "1914: Glory's End / When Eagles Fight": x1914_glorys_end,
     '1936: Guerra Civil': collapse_pkgs,
     '1985: Under an Iron Sky': collapse_pkgs,
-    '300: Earth & Water': collapse_pkgs, 
+    '300: Earth & Water': collapse_pkgs,
 
     # A
     'A las Barricadas! (2nd Edition)': collapse_pkgs,
     'Aces of Valor': collapse_pkgs,
     'Across Suez': collapse_pkgs,
+    'Across 5 Aprils': a5a,
     'Age of Dogfights: WW1': collapse_pkgs,
     'Age of Muskets Volume I: Tomb for an Empire': collapse_pkgs,
     'Aegean Strike': collapse_pkgs,
@@ -239,7 +305,9 @@ fixups = {
     'Arcole 1796': collapse_pkgs,
     'Ardennes II': collapse_pkgs,
     'The Ardennes Offensive: The Battle of the Bulge, December 1944': collapse_pkgs,
+    "Ardennes '44": ardennes_44,
     'Arena: Roma II': collapse_pkgs,
+    'Arquebus: Men of Iron Volume IV': arquebus,
     'Arracourt': collapse_pkgs,
     'Arriba Espana!': arriba_espana,
     'Ashes: Rise of the Phoenixborn': collapse_pkgs,
@@ -248,6 +316,7 @@ fixups = {
     'Attack Sub': collapse_pkgs,
     'Austerlitz': collapse_pkgs,
     'Austerlitz 1805': collapse_pkgs,
+    'Avec Infini Regret': avec_infini_regret,
     'Axis & Allies': collapse_pkgs,
     'Axis & Allies Naval Miniatures: War at Sea': collapse_pkgs,
     'Axis & Allies Pacific: 1940 Edition': collapse_pkgs,
@@ -276,11 +345,15 @@ fixups = {
     'Epées souveraines : Bouvines 1214 - Worringen 1288': epees_souv,
     'Eurydice & Orpheus': no_box_image,
 
-    #
+    # F
     'Fields of Fire': collapse_pkgs,
 
     # G
     'Gospitch & Ocaña 1809': gospitch,
+
+    # H
+    'A House Divided': a_house_divided,
+    'Highway to the Kremlin': highway_to_the_kremlin,
 
     # L
     "Le Lion et l'Epée": le_lion_et_lepee,
@@ -323,7 +396,7 @@ fixups = {
     'Victory in Vietnam': collapse_pkgs,
 
     # W
-    "Wacht am Rhein': The Battle of the Bulge, 16 Dec 44-2 Jan 45": wacht_am_rhein, 
+    "Wacht am Rhein': The Battle of the Bulge, 16 Dec 44-2 Jan 45": wacht_am_rhein,
     'War At Sea': collapse_pkgs,
     'The War At Sea (first edition)': collapse_pkgs,
     'WARLINE: Maneuver Strategy & Tactics': collapse_pkgs,
@@ -356,7 +429,7 @@ async def run():
     ipath = 'data/pagejson'
     opath = 'data/pagejson_fixed'
 
-    shutil.copytree(ipath, opath, dirs_exist_ok=True) 
+    shutil.copytree(ipath, opath, dirs_exist_ok=True)
 
     async with asyncio.TaskGroup() as tg:
         for f in glob.glob(f"{opath}/[0-9]*.json"):
