@@ -238,6 +238,15 @@ CREATE TABLE tags_w (
 )
         ''')
 
+        cur.execute('DROP TABLE IF EXISTS links_w')
+        cur.execute('''
+CREATE TABLE links_w (
+  project_id INTEGER NOT NULL,
+  link TEXT NOT NULL,
+  FOREIGN KEY(project_id) REFERENCES projects_w(project_id)
+)
+        ''')
+
 
 def populate_users(conn, upath):
     with open(upath, 'r') as f:
@@ -554,6 +563,29 @@ WHERE file_id = ?
                         row[0]
                     )
                 )
+
+
+def rewrite_image_links(conn):
+    with conn as cur:
+        rows = cur.execute('''
+SELECT
+    links_w.link,
+    projects_w.project_id,
+    links_w.project_id
+FROM links_w
+JOIN projects_w
+ON replace(links_w.link, "_", " ") = projects_w.game_title
+            '''
+        ).fetchall()
+
+        for r in rows:
+            cur.execute('''
+UPDATE projects_w
+SET text = replace(text, "Module:" || ?, ?)
+WHERE projects_w.project_id = ?
+                ''',
+                r
+            )
 
 
 def apply_fixups(conn):
@@ -1168,7 +1200,6 @@ def parse_screenshot_image(filename, file_meta, file_ctimes):
         if filename.startswith("[[") and filename.endswith("]]"):
             filename = filename[2:-2]
 
-#        filename = filename.lstrip().split('|')[0].replace('%20', ' ').rstrip()
         filename = filename.lstrip().split('|')[0]
         filename = urllib.parse.unquote(filename).rstrip()
         filename = image_prefix_re.sub('', filename)
@@ -1328,6 +1359,22 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
     # replace strikethrough HTML with markdown
     readme = readme.replace('<s>', '~~').replace('</s>', '~~')
     readme = readme.replace('<strike>', '~~').replace('</strike>', '~~')
+
+    for i, img in enumerate(p['images']):
+        irec = parse_screenshot_image(img[0], file_meta, file_ctimes)
+        if irec:
+            images.append(irec)
+
+            if img[1]:
+                img_norm = img[0].replace(' ', '_')
+                readme = readme.replace(f"IMAGE_LINK_{i}", f"[![]({img_norm})]({img[1]})")
+                if img[1].startswith('Module:'):
+                    lname = img[1].removeprefix('Module:')
+                    lrec = {
+                        'project_id': num,
+                        'link': lname
+                    }
+                    do_insert(conn, 'links_w', 'project_id', lrec)
 
     mrec = {
         'game_title': title,
@@ -1540,6 +1587,7 @@ async def run():
         add_placeholder_user_emails(conn)
         populate_versions(conn, vpath)
         populate_compatibility(conn)
+        rewrite_image_links(conn)
         apply_fixups(conn)
         convert_for_gls(conn)
 
