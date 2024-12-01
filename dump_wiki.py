@@ -192,7 +192,7 @@ def parse_players(page):
     return players
 
 
-def extract(e):
+def extract_g(e):
     fields = e.split('|')
     img = fields[0].replace('Image:', '').strip()
     alt = '' if len(fields) < 2 else fields[1].strip()
@@ -210,7 +210,7 @@ def parse_gallery(page):
         return []
 
     images = [
-        extract(e) for tag in tags for e in tag.contents.split('\n') if e != ''
+        extract_g(e) for tag in tags for e in tag.contents.split('\n') if e != ''
     ]
 
     for tag in tags:
