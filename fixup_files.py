@@ -233,6 +233,16 @@ user_fixups = {
     "File:Readme.txt": 'GJK',
     "File:Aireaters002.vmod": 'Jimu',
     "File:Aireaters006.vmod": 'Jimu',
+    "File:VG-7thFleet.vmod": 'Jofclark',
+    "File:DawnPatrol.vmod": 'Gklong01',
+    "File:DawnPatrol.zip": 'Gklong01',
+    "File:DawnPatrolv12.vmod": 'Gklong01',
+    "File:Dreux.vmod": 'Greenhorn',
+    "File:Dreux setup.vsav": 'Greenhorn',
+    "File:Dreux readme.txt": 'Greenhorn',
+    "File:Ivry.vmod": 'Greenhorn',
+    "File:Ivry setup.vsav": 'Greenhorn',
+    "File:Ivry readme.txt": 'Greenhorn',
 }
 
 
