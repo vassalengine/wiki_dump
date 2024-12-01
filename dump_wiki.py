@@ -219,6 +219,42 @@ def parse_gallery(page):
     return images
 
 
+def maybe_image(n):
+    t = n.title
+    return t.startswith(('Image:', 'File:', 'Media:')) and t.lower().endswith(('jpeg', 'jpg', 'png', 'gif'))
+
+
+def extract_i(l):
+    t = str(l.title)
+    return t[t.index(':') + 1:].strip()
+
+
+def parse_images(page):
+    tags = page.filter_wikilinks(matches=maybe_image)
+
+    images = []
+
+    for tag in tags:
+        prefix, title = tag.title.split(':')
+        t = title[0].upper() + title[1:]
+        tag.title = prefix + ':' + t
+
+        l = None
+        if tag.text:
+            opts = tag.text.split('|')
+            for o in opts:
+                if o.startswith('link='):
+                    l = o.removeprefix('link=')
+
+                    repl = mwparserfromhell.nodes.text.Text(f"IMAGE_LINK_{len(images) - 1}")
+                    page.replace(tag, repl)
+                    break
+
+        images.append((t, l))
+
+    return images
+
+
 def remove_headings(page):
     to_remove = [
         'Comments',
@@ -295,6 +331,7 @@ async def parse_page(inpath, outpath, ctimes):
         maintainer, contributors = parse_module_contact_info(t)
         gallery = parse_gallery(t)
         players = parse_players(t)
+        images = parse_images(t)
 
         remove_cruft(t)
         remove_headings(t)
@@ -310,6 +347,7 @@ async def parse_page(inpath, outpath, ctimes):
             'contributors': contributors,
             'modules': modules,
             'gallery': gallery,
+            'images': images,
             'players': players,
             'readme': t.strip()
         }
@@ -325,7 +363,6 @@ async def parse_page(inpath, outpath, ctimes):
 
 async def run():
     ctime_path = 'data/page_ctimes.json'
-
     with open(ctime_path, 'r') as f:
         ctimes = json.load(f)
 
