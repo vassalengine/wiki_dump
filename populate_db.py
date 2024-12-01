@@ -1370,9 +1370,13 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
         if irec:
             images.append(irec)
 
+            img_norm = img[0].replace(' ', '_')
             if img[1]:
-                img_norm = img[0].replace(' ', '_')
                 readme = readme.replace(f"IMAGE_LINK_{i}", f"[![]({img_norm})]({img[1]})")
+            else:
+                readme = readme.replace(f"IMAGE_LINK_{i}", f"![]({img_norm})")
+
+            if img[1]:
                 if img[1].startswith('Module:'):
                     lname = img[1].removeprefix('Module:')
                     lrec = {
