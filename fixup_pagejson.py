@@ -4,9 +4,12 @@ import json
 import shutil
 import os
 
+from versions import try_parse_version
+
 
 def no_box_image(p):
     p['info']['image'] = ''
+    return False
 
 
 def collapse_pkgs(p):
@@ -18,19 +21,22 @@ def collapse_pkgs(p):
         d += v
 
     p['modules'] = { p['title']: d }
+    return False
 
 
 def x13_dead_end_drive(p):
     p['modules'] = {
         'Spanish': [ m for v in p['modules'].values() for m in v ]
     }
+    return True
 
 
 def x1914_glorys_end(p):
-     p['modules'] = {
+    p['modules'] = {
         "Glory's End": p['modules']["1.0 Glory's End"],
         'When Eagles Fight': p['modules']['1.0 When Eagles Fight']
     }
+    return True
 
 
 def a5a(p):
@@ -42,18 +48,21 @@ def a5a(p):
         'Bentonville': [ m for v in p['modules'].values() for m in v if 'Bentonville' in m['filename'] ],
         'Rules': [ m for v in p['modules'].values() for m in v if 'pdf' in m['filename'] ]
     }
+    return True
 
 
 def apuren_el(p):
     p['title'] = '¡' + p['title']
+    return False
 
 
 def ardennes_44(p):
     p['modules'] = {
         '3rd Edition': [ m for v in p['modules'].values() for m in v if '3rd' in m['filename'] ],
         '2nd Edition': [ m for v in p['modules'].values() for m in v if '2ed' in m['filename'] or '2nd' in m['filename'] ],
-        '1st Edition': [ m for v in p['modules'].values() for m in v if '2ed' in m['filename'] or '2nd' in m['filename'] if '3rd' not in m['filename'] and '2nd' not in m['filename'] and '2ed' not in m['filename'] ]
+        '1st Edition': [ m for v in p['modules'].values() for m in v if '2ed' not in m['filename'] and '2nd' not in m['filename'] and '3rd' not in m['filename']]
     }
+    return True
 
 
 def arquebus(p):
@@ -67,15 +76,18 @@ def arquebus(p):
         'Marignano': [ m for v in p['modules'].values() for m in v if 'Marignano' in m['filename'] ],
         'Pavia': [ m for v in p['modules'].values() for m in v if 'Pavia' in m['filename'] ]
     }
+    return True
 
 
 def arriba_espana(p):
     p['title'] = '¡Arriba España!'
+    return False
 
 
 def assault_of_the_dead(p):
     p['modules']['Alternate Version'] = p['modules']['1.0 Alternate Version']
     del p['modules']['1.0 Alternate Version']
+    return True
 
 
 def avec_infini_regret(p):
@@ -84,6 +96,7 @@ def avec_infini_regret(p):
         'Battle of Dreux - December 19th, 1562': [ m for v in p['modules'].values() for m in v if 'Dreux' in m['filename'] ],
         "Battle for La Roche-l' Abeille, 25th June 1569": [ m for v in p['modules'].values() for m in v if 'Roche' in m['filename'] ]
     }
+    return True
 
 
 def battles_for_the_shenandoah(p):
@@ -93,6 +106,15 @@ def battles_for_the_shenandoah(p):
         'McDowell': [ m for v in p['modules'].values() for m in v if 'McDowell' in m['filename'] ],
         'Piedmont': [ m for v in p['modules'].values() for m in v if 'Piedmont' in m['filename'] ]
     }
+    return True
+
+
+def battle_hymn(p):
+    p['modules'] = {
+        'Battle Hymn': [ m for v in p['modules'].values() for m in v if 'Battle' in m['filename'] ],
+        'Leatherneck': [ m for v in p['modules'].values() for m in v if 'Leatherneck' in m['filename'] ]
+    }
+    return True
 
 
 def battle_hymn_vol_1(p):
@@ -100,6 +122,7 @@ def battle_hymn_vol_1(p):
         'Gettysburg': [ m for v in p['modules'].values() for m in v if 'Gettysburg' in m['filename'] ],
         'Pea Ridge': [ m for v in p['modules'].values() for m in v if 'Pea' in m['filename'] ]
     }
+    return True
 
 
 def battle_of_corinth(p):
@@ -110,6 +133,7 @@ def battle_of_corinth(p):
         'Jackson at the Crossroads': jatc,
         'Corinth': [ m for v in p['modules'].values() for m in v ]
     }
+    return True
 
 
 def blockade(p):
@@ -117,6 +141,7 @@ def blockade(p):
         'Blockade': [ m for v in p['modules'].values() for m in v if 'Duel' not in m['filename'] ],
         'Blockade Duel': [ m for v in p['modules'].values() for m in v if 'Duel' in m['filename'] ]
     }
+    return True
 
 
 def bloody_steppes(p):
@@ -125,6 +150,7 @@ def bloody_steppes(p):
         'Balaclava': [ m for v in p['modules'].values() for m in v if 'Balaclava' in m['filename'] ],
         'Inkerman': [ m for v in p['modules'].values() for m in v if 'Inkerman' in m['filename'] ]
     }
+    return True
 
 
 def brandywine_germantown(p):
@@ -132,6 +158,7 @@ def brandywine_germantown(p):
         'Brandywine': [ m for v in p['modules'].values() for m in v if 'Brandywine' in m['filename'] ],
         'Germantown': [ m for v in p['modules'].values() for m in v if 'Germantown' in m['filename'] ]
     }
+    return True
 
 
 def case_yellow(p):
@@ -139,6 +166,7 @@ def case_yellow(p):
         'Scenarios 1 and 2': [ m for v in p['modules'].values() for m in v if 'SC_1_2' in m['filename'] ],
         'Scenario 3': [ m for v in p['modules'].values() for m in v if 'SC_3' in m['filename'] ]
     }
+    return True
 
 
 def cobra(p):
@@ -146,6 +174,7 @@ def cobra(p):
         'Cobra from S&T #64': [ m for v in p['modules'].values() for m in v if 'v04' in m['filename'] ],
         'Cobra from S&T #251': [ m for v in p['modules'].values() for m in v if 'Cobra2' in m['filename'] ]
     }
+    return True
 
 
 def crimean_war_battles(p):
@@ -155,6 +184,15 @@ def crimean_war_battles(p):
         'Inkerman': [ m for v in p['modules'].values() for m in v if 'Inkerman' in m['filename'] ],
         'Tchernaya River': [ m for v in p['modules'].values() for m in v if 'Tchernaya' in m['filename'] ]
     }
+    return True
+
+
+def dien_bien_phu_tfg(p):
+    p['modules'] = {
+        '2nd Edition': [ m for v in p['modules'].values() for m in v if '2ed' in m['filename'] ],
+        '1st Edition': [ m for v in p['modules'].values() for m in v if '2ed' not in m['filename'] ]
+    }
+    return True
 
 
 def epees_crois(p):
@@ -162,6 +200,7 @@ def epees_crois(p):
         'Ascalon': [ m for v in p['modules'].values() for m in v if 'Ascalon' in m['filename'] ],
         'Dorylee': [ m for v in p['modules'].values() for m in v if 'Dorylee' in m['filename'] ]
     }
+    return True
 
 
 def epees_norm(p):
@@ -170,6 +209,7 @@ def epees_norm(p):
         'Vales Dunes': [ m for v in p['modules'].values() for m in v if 'ValesDunes' in m['filename'] ],
         'Varaville': [ m for v in p['modules'].values() for m in v if 'Varaville' in m['filename'] ]
     }
+    return True
 
 
 def epees_souv(p):
@@ -177,6 +217,36 @@ def epees_souv(p):
         'Bouvines': [ m for v in p['modules'].values() for m in v if 'Bouvines' in m['filename'] ],
         'Worrigen': [ m for v in p['modules'].values() for m in v if 'Worrigen' in m['filename'] ]
     }
+    return True
+
+
+def fighting_general_patton(p):
+    p['modules'] = {
+        "At Fascists' Foot": [ m for v in p['modules'].values() for m in v if 'AFF' in m['filename'] ],
+        "Breakthrough Ironcurtain": [ m for v in p['modules'].values() for m in v if 'BI' in m['filename'] ],
+        "Rush on Avranches": [ m for v in p['modules'].values() for m in v if 'RoA' in m['filename'] ],
+        "Raise the Siege": [ m for v in p['modules'].values() for m in v if 'RtS' in m['filename'] ],
+        "Files": [ m for v in p['modules'].values() for m in v if 'Notes' in m['filename'] ]
+    }
+    return True
+
+
+def forgotten_legions(p):
+    p['modules'] = {
+        'Drive on Damascus': [ m for v in p['modules'].values() for m in v if 'Damascus' in m['filename'] ],
+        'Bloody Keren': [ m for v in p['modules'].values() for m in v if 'Keren' in m['filename'] ]
+    }
+    return True
+
+
+def four_battles_in_north_africa(p):
+    p['modules'] = {
+        'Cauldron': [ m for v in p['modules'].values() for m in v if 'Cauldron' in m['filename'] ],
+        'Crusader': [ m for v in p['modules'].values() for m in v if 'Crusader' in m['filename'] ],
+        'Kasserine': [ m for v in p['modules'].values() for m in v if 'Kasserine' in m['filename'] ],
+        'Supercharge': [ m for v in p['modules'].values() for m in v if 'Supercharge' in m['filename'] ]
+    }
+    return True
 
 
 def gospitch(p):
@@ -184,10 +254,12 @@ def gospitch(p):
         'Gospitch': [ m for v in p['modules'].values() for m in v if 'Gospitch' in m['filename'] ],
         'Ocaña': [ m for v in p['modules'].values() for m in v if 'Ocana' in m['filename'] ]
     }
+    return True
 
 
 def highway_to_the_kremlin(p):
     p['readme'] = p['readme'].removeprefix("''' File for this module version are hosted at [http://www.limeyyankgames.co.uk/ Limey Yank Games]'''\n\n\n\n\n\n\n\n\n\n\n\n")
+    return False
 
 
 def a_house_divided(p):
@@ -195,6 +267,35 @@ def a_house_divided(p):
         'GDW 1st Edition': [ m for v in p['modules'].values() for m in v if m['filename'].startswith('ahd_') ],
         'Phalanx': [ m for v in p['modules'].values() for m in v if m['filename'].startswith('AHD') ]
     }
+    return True
+
+
+def la_sombra(p):
+    p['modules'] = {
+        'Medellín': [ m for v in p['modules'].values() for m in v if 'MEDELLIN' in m['filename'] ],
+        'Alcañíz':  [ m for v in p['modules'].values() for m in v if 'ALCANIZ' in m['filename'] ],
+        'María de Huerva':  [ m for v in p['modules'].values() for m in v if 'MARIA' in m['filename'] ],
+        'Tamames':  [ m for v in p['modules'].values() for m in v if 'TAMAMES' in m['filename'] ],
+        'Castalla':  [ m for v in p['modules'].values() for m in v if 'CASTALLA' in m['filename'] ]
+    }
+    return True
+
+
+def la_treve(p):
+    p['modules'] = {
+        'Blanquetaque': [ m for v in p['modules'].values() for m in v if 'Blanquetaque' in m['filename'] ],
+        'Guinegatte':  [ m for v in p['modules'].values() for m in v if 'Guinegatte' in m['filename'] ]
+    }
+    return True
+
+
+def le_dauphin(p):
+    p['modules'] = {
+        'Dieppe': [ m for v in p['modules'].values() for m in v if 'Dieppe' in m['filename'] ],
+        'Saint-Jacques-sur-la-Brise':  [ m for v in p['modules'].values() for m in v if 'StJacques' in m['filename'] ],
+        'Montlhéry': [ m for v in p['modules'].values() for m in v if 'Montlhery' in m['filename'] ]
+    }
+    return True
 
 
 def le_lion_et_lepee(p):
@@ -202,6 +303,7 @@ def le_lion_et_lepee(p):
         'Arsouf': [ m for v in p['modules'].values() for m in v if 'Arsouf' in m['filename'] ],
         'Tremithoussia': [ m for v in p['modules'].values() for m in v if 'Tremithoussia' in m['filename'] ]
     }
+    return True
 
 
 def ngbg(p):
@@ -212,6 +314,18 @@ def ngbg(p):
         'Landskrona': [ m for v in p['modules'].values() for m in v if 'Landskrona' in m['filename'] ],
         'Malmoe': [ m for v in p['modules'].values() for m in v if 'Malmoe' in m['filename'] ]
     }
+    return True
+
+
+def par_le_feu(p):
+    p['modules'] = {
+        'Arques': [ m for v in p['modules'].values() for m in v if 'Arques' in m['filename'] ],
+        'Coutras': [ m for v in p['modules'].values() for m in v if 'Coutras' in m['filename'] ],
+        'Jarnac': [ m for v in p['modules'].values() for m in v if 'Jarnac' in m['filename'] ],
+        "La Roche l'Abeiller": [ m for v in p['modules'].values() for m in v if 'Roche' in m['filename'] ],
+        'Saint-Denis': [ m for v in p['modules'].values() for m in v if 'Saint' in m['filename'] ]
+    }
+    return True
 
 
 def paris_vaut(p):
@@ -219,6 +333,7 @@ def paris_vaut(p):
         'Dreux 1562': [ m for v in p['modules'].values() for m in v if 'Dreux' in m['filename'] ],
         'Ivry 1590': [ m for v in p['modules'].values() for m in v if 'Ivry' in m['filename'] ]
     }
+    return True
 
 
 def prussias_glory_ii(p):
@@ -226,6 +341,7 @@ def prussias_glory_ii(p):
         'Krefeld': [ m for v in p['modules'].values() for m in v if 'Krefeld' in m['filename'] ],
         'Prague': [ m for v in p['modules'].values() for m in v if 'Prague' in m['filename'] ]
     }
+    return True
 
 
 def quatre_batailles_en_espagne(p):
@@ -235,10 +351,53 @@ def quatre_batailles_en_espagne(p):
         'Vitoria': p['modules']['1.0 Vitoria'],
         'Sorauren': p['modules']['1.0 Sorauren']
     }
+    return True
+
+
+def raider_drop_zone(p):
+    p['info']['length'] = '1-8 hours'
+    return False
 
 
 def return_to_the_rock(p):
     p['maintainer'] = [ [ None, "Airjudden" ] ]
+    return False
+
+
+def roads_to_l(p):
+    p['modules'] = {
+        'Staraya Russa Scenarios': [ m for v in p['modules'].values() for m in v if 'Staraya' in m['filename'] ],
+        'Soltsy Scenarios':  [ m for v in p['modules'].values() for m in v if 'Soltsy' in m['filename'] ],
+    }
+    return True
+
+
+def tdog1805(p):
+    p['modules'] = {
+        'Austerlitz': [ m for v in p['modules'].values() for m in v if 'Austerlitz' in m['filename'] ],
+        'Elchingen': [ m for v in p['modules'].values() for m in v if 'Elchingen' in m['filename'] ],
+        'Hollabrunn': [ m for v in p['modules'].values() for m in v if 'Hollabrunn' in m['filename'] ]
+    }
+    return True
+
+
+def tywq(p):
+    p['modules'] = {
+        'Freiburg': [ m for v in p['modules'].values() for m in v if 'Freiburg' in m['filename'] ],
+        'Lutzen': [ m for v in p['modules'].values() for m in v if 'Lutzen' in m['filename'] ],
+        'Nordigen': [ m for v in p['modules'].values() for m in v if 'Nordigen' in m['filename'] ],
+        'Rocroi': [ m for v in p['modules'].values() for m in v if 'Rocroi' in m['filename'] ],
+        'Breitenfeld': [ m for v in p['modules'].values() for m in v if 'Breitenfeld' in m['filename'] ]
+    }
+    return True
+
+
+def triumph_and_tragedy(p):
+    p['modules'] = {
+        'C&T': [ m for v in p['modules'].values() for m in v if 'Triumph' not in m['filename'] ],
+        'T&T':[ m for v in p['modules'].values() for m in v if 'Triumph' in m['filename'] ]
+    }
+    return True
 
 
 def twin_peaks(p):
@@ -249,6 +408,7 @@ def twin_peaks(p):
         'Cedar Mountain': cm,
         'South Mountain': sm
     }
+    return True
 
 
 def ukraine_43(p):
@@ -258,10 +418,12 @@ def ukraine_43(p):
     del p['modules']['2nd Edition v1.02']
 
     p['modules']['2nd Edition'] = [ *two_ed1, *two_ed2 ]
+    return True
 
 
 def yggdrasil(p):
     p['modules']['Dark Eclipse'] += p['modules'].pop('Dark Eclipse v2.0')
+    return True
 
 
 def wacht_am_rhein(p):
@@ -276,6 +438,26 @@ def wacht_am_rhein(p):
             *p['modules']["1.3 East is up Orientation"]
         ]
     }
+    return True
+
+
+def westpac_1978(p):
+    p['modules'] = {
+        'Westpac 1978':  [ m for v in p['modules'].values() for m in v if 'Westpac' in m['filename'] ],
+        'Denmark Strait 1978':  [ m for v in p['modules'].values() for m in v if 'Denmark' in m['filename'] ]
+    }
+    return True
+
+
+def westwall(p):
+    p['modules'] = {
+        'Combined': [ m for v in p['modules'].values() for m in v if 'Quad' in m['filename'] ],
+        'Arnhem': [ m for v in p['modules'].values() for m in v if 'Arnhem' in m['filename'] ],
+        'Bastogne': [ m for v in p['modules'].values() for m in v if 'Bastogne' in m['filename'] ],
+        'Hurtgen Forest': [ m for v in p['modules'].values() for m in v if 'Hurtgen' in m['filename'] ],
+        'Remagen': [ m for v in p['modules'].values() for m in v if 'Remagen' in m['filename'] ]
+    }
+    return True
 
 
 fixups = {
@@ -325,6 +507,7 @@ fixups = {
     'Balkan Front': collapse_pkgs,
     'Band of Brothers': collapse_pkgs,
     'BAOR': collapse_pkgs,
+    'Battle Hymn': battle_hymn,
     'Battle Hymn Vol.1: Gettysburg and Pea Ridge': battle_hymn_vol_1,
     'The Battle of Corinth: Standoff at the Tennessee, October 3-4, 1862': battle_of_corinth,
     'Battles for the Shenadoah: A Death Valley Expansion': battles_for_the_shenandoah,
@@ -336,8 +519,12 @@ fixups = {
     # C
     'Case Yellow, 1940: The German Blitzkrieg in the West': case_yellow,
     'The Caucasus Campaign: The Russo-German War in the Caucasus, 1942': collapse_pkgs,
+    'Cobra: Game of the Normandy Breakout': cobra,
     'Crimean War Battles': crimean_war_battles,
     'Crossing the Line: Aachen 1944': collapse_pkgs,
+
+    # D
+    'Dien Bien Phu: The Final Gamble': dien_bien_phu_tfg,
 
     # E
     'Epées et croisades': epees_crois,
@@ -347,6 +534,9 @@ fixups = {
 
     # F
     'Fields of Fire': collapse_pkgs,
+    'The Fighting General Patton': fighting_general_patton,
+    'Forgotten Legions': forgotten_legions,
+    'Four Battles in North Africa': four_battles_in_north_africa,
 
     # G
     'Gospitch & Ocaña 1809': gospitch,
@@ -356,6 +546,9 @@ fixups = {
     'Highway to the Kremlin': highway_to_the_kremlin,
 
     # L
+    'La sombra del aguila': la_sombra,
+    "La Trêve ou l'Epée": la_treve,
+    "Le Dauphin et l'Epée": le_dauphin,
     "Le Lion et l'Epée": le_lion_et_lepee,
     'The Lord of the Rings: The Card Game': collapse_pkgs,
 
@@ -367,14 +560,21 @@ fixups = {
     'Normandy, The Beginning of the End': collapse_pkgs,
     'Nothing Gained But Glory': ngbg,
 
+    # O
+    'Operation Theseus: Gazala 1942': collapse_pkgs,
+
     # P
+    'Par le feu, le fer et la Foi': par_le_feu,
+    'Paris vaut bien une messe !': paris_vaut,
     "Prussia's Glory II": prussias_glory_ii,
 
     # Q
     'Quatre Batailles en Espagne': quatre_batailles_en_espagne,
 
     # R
+    'Raider Drop Zone': raider_drop_zone,
     'Return to the Rock: Corregidor, 1945': return_to_the_rock,
+    'Roads to Leningrad: Battles of Soltsy and Staraya Russa, 1941': roads_to_l,
     'Rommel (2017)': no_box_image,
     'Ruse & Bruise': collapse_pkgs,
 
@@ -383,6 +583,9 @@ fixups = {
 
     # T
     'TablaPeriodica': no_box_image,
+    'Thirty Years War Quad': tywq,
+    'Three Days of Glory 1805': tdog1805,
+    'Triumph & Tragedy': triumph_and_tragedy,
     'Twin Peaks': twin_peaks,
 
     # U
@@ -400,6 +603,8 @@ fixups = {
     'War At Sea': collapse_pkgs,
     'The War At Sea (first edition)': collapse_pkgs,
     'WARLINE: Maneuver Strategy & Tactics': collapse_pkgs,
+    'Westpac 1978': westpac_1978,
+    'Westwall: Four Battles to Germany': westwall,
 
     # Y
     'Ye Gods!': collapse_pkgs,
@@ -417,9 +622,20 @@ async def fixup_page(path):
     with open(path, 'r') as f:
         p = json.loads(f.read().replace('\\u200e', ''))
 
-    fixup = fixups.get(p['title'], None)
-    if fixup is not None:
-        fixup(p)
+    title = p['title']
+
+    # apply fixups
+    fixup = fixups.get(title, None)
+    if fixup is None or not fixup(p):
+        # rewrite packages
+        mods = p.get('modules', {})
+        secs = list(mods.keys())
+        for sec in secs:
+            # if sec is a version, dump everything into the common package
+            if sec == title or try_parse_version(sec) is not None:
+                m = mods.setdefault('Module', [])
+                m += mods[sec]
+                del mods[sec]
 
     with open(path, 'w') as f:
         json.dump(p, f, indent=2)
