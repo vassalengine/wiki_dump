@@ -240,17 +240,19 @@ def parse_images(page):
         tag.title = prefix + ':' + t
 
         l = None
+        images.append((t, l))
+
         if tag.text:
             opts = tag.text.split('|')
             for o in opts:
                 if o.startswith('link='):
                     l = o.removeprefix('link=')
+                    images[-1] = (t, l)
 
                     repl = mwparserfromhell.nodes.text.Text(f"IMAGE_LINK_{len(images) - 1}")
                     page.replace(tag, repl)
                     break
 
-        images.append((t, l))
 
     return images
 
