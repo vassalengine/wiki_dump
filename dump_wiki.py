@@ -221,7 +221,7 @@ def parse_gallery(page):
 
 def maybe_image(n):
     t = n.title
-    return t.startswith(('Image:', 'File:', 'Media:')) and t.lower().endswith(('jpeg', 'jpg', 'png', 'gif'))
+    return t.startswith(('Image:', 'File:', 'Media:')) and t.lower().endswith(('.jpeg', '.jpg', '.png', '.gif'))
 
 
 def extract_i(l):
@@ -240,18 +240,17 @@ def parse_images(page):
         tag.title = prefix + ':' + t
 
         l = None
-        images.append((t, l))
 
         if tag.text:
             opts = tag.text.split('|')
             for o in opts:
                 if o.startswith('link='):
                     l = o.removeprefix('link=')
-                    images[-1] = (t, l)
-
-                    repl = mwparserfromhell.nodes.text.Text(f"IMAGE_LINK_{len(images) - 1}")
-                    page.replace(tag, repl)
                     break
+
+        images.append((t, l))
+        repl = mwparserfromhell.nodes.text.Text(f"IMAGE_LINK_{len(images) - 1}")
+        page.replace(tag, repl)
 
 
     return images
