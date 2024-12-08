@@ -220,7 +220,7 @@ user_fixups = {
     "File:Alamo.vmod": 'GJK',
     "File:Alamo114.vmod": 'GJK',
     "File:Rise of the Roman Republic.vmod": 'Kcoombs',
-    "File:AirPower.vmod": 'Jean-claude.lallemant',
+    "File:AirPower.vmod": 'Jc222',
     "File:TPStalingrad.vmod": 'Toze_Santos',
     "File:BtB ver2-01.vmod": 'Alexander331bc',
     "File:War of the suns v06.vmod": 'Brent_Easton',

@@ -109,6 +109,22 @@ def battles_for_the_shenandoah(p):
     return True
 
 
+def tbotb(p):
+    p['modules'] = {
+        '1st Edition': [ m for v in p['modules'].values() for m in v if '2nd' not in m['filename'] ],
+        '2nd Edition': [ m for v in p['modules'].values() for m in v if '2nd' in m['filename'] ]
+    }
+    return True
+
+
+def battle_of_monmouth(p):
+    p['modules'] = {
+        'SPI': [ m for v in p['modules'].values() for m in v if 'S&T' not in m['filename'] ],
+        'S&T 90': [ m for v in p['modules'].values() for m in v if 'S&T' in m['filename'] ]
+    }
+    return True
+
+
 def battle_hymn(p):
     p['modules'] = {
         'Battle Hymn': [ m for v in p['modules'].values() for m in v if 'Battle' in m['filename'] ],
@@ -270,6 +286,14 @@ def a_house_divided(p):
     return True
 
 
+def kaisers_pirates(p):
+    p['modules'] = {
+        'Module': [ m for v in p['modules'].values() for m in v if 'Solitaire' not in m['filename'] ],
+        'Solitaire': [ m for v in p['modules'].values() for m in v if 'Solitaire' in m['filename'] ]
+    }
+    return True
+
+
 def la_sombra(p):
     p['modules'] = {
         'Medellín': [ m for v in p['modules'].values() for m in v if 'MEDELLIN' in m['filename'] ],
@@ -306,6 +330,16 @@ def le_lion_et_lepee(p):
     return True
 
 
+def nawfb(p):
+    p['modules'] = {
+        'Wagram': [ m for v in p['modules'].values() for m in v if 'Wagram' in m['filename'] ],
+        'Jena-Auerstadt': [ m for v in p['modules'].values() for m in v if 'Jena' in m['filename'] ],
+        'The Battle of Nations': [ m for v in p['modules'].values() for m in v if 'Nations' in m['filename'] ],
+        'Marengo': [ m for v in p['modules'].values() for m in v if 'Marengo' in m['filename'] ]
+    }
+    return True
+
+
 def ngbg(p):
     p['modules'] = {
         'Nyborg-Fehrbellin': [ m for v in p['modules'].values() for m in v if 'Nyborg' in m['filename'] ],
@@ -313,6 +347,14 @@ def ngbg(p):
         'Lund': [ m for v in p['modules'].values() for m in v if 'Lund' in m['filename'] ],
         'Landskrona': [ m for v in p['modules'].values() for m in v if 'Landskrona' in m['filename'] ],
         'Malmoe': [ m for v in p['modules'].values() for m in v if 'Malmoe' in m['filename'] ]
+    }
+    return True
+
+
+def next_war_korea(p):
+    p['modules'] = {
+        '2nd Edition': [ m for v in p['modules'].values() for m in v if '2nd' in m['filename'] ],
+        '1st Edition': [ m for v in p['modules'].values() for m in v if '2nd' not in m['filename'] ]
     }
     return True
 
@@ -334,6 +376,15 @@ def paris_vaut(p):
         'Ivry 1590': [ m for v in p['modules'].values() for m in v if 'Ivry' in m['filename'] ]
     }
     return True
+
+
+def pericles(p):
+    p['modules'] = {
+        '2-4 Players with Bots': [ m for v in p['modules'].values() for m in v if 'Solitaire' not in m['filename'] ],
+        'Solitaire only': [ m for v in p['modules'].values() for m in v if 'Solitaire' in m['filename'] ]
+    }
+    return True
+
 
 
 def prussias_glory_ii(p):
@@ -368,6 +419,18 @@ def roads_to_l(p):
     p['modules'] = {
         'Staraya Russa Scenarios': [ m for v in p['modules'].values() for m in v if 'Staraya' in m['filename'] ],
         'Soltsy Scenarios':  [ m for v in p['modules'].values() for m in v if 'Soltsy' in m['filename'] ],
+    }
+    return True
+
+
+def tacw(p):
+    p['modules'] = {
+        '2nd Newbury': [ m for v in p['modules'].values() for m in v if '2nd' in m['filename'] ],
+        '1st Newbury': [ m for v in p['modules'].values() for m in v if '1st' in m['filename'] ],
+        'Naseby': [ m for v in p['modules'].values() for m in v if 'Naseby' in m['filename'] ],
+        'Edgehill': [ m for v in p['modules'].values() for m in v if 'Edgehill' in m['filename'] ],
+        'Cheriton': [ m for v in p['modules'].values() for m in v if 'Cheriton' in m['filename'] ],
+        'Marston Moor': [ m for v in p['modules'].values() for m in v if 'Marston' in m['filename'] ]
     }
     return True
 
@@ -507,6 +570,8 @@ fixups = {
     'Balkan Front': collapse_pkgs,
     'Band of Brothers': collapse_pkgs,
     'BAOR': collapse_pkgs,
+    'The Battle of the Bulge': tbotb,
+    'The Battle of Monmouth (1982)': battle_of_monmouth,
     'Battle Hymn': battle_hymn,
     'Battle Hymn Vol.1: Gettysburg and Pea Ridge': battle_hymn_vol_1,
     'The Battle of Corinth: Standoff at the Tennessee, October 3-4, 1862': battle_of_corinth,
@@ -545,6 +610,9 @@ fixups = {
     'A House Divided': a_house_divided,
     'Highway to the Kremlin': highway_to_the_kremlin,
 
+    # K
+    "The Kaiser's Pirates": kaisers_pirates,
+
     # L
     'La sombra del aguila': la_sombra,
     "La Trêve ou l'Epée": la_treve,
@@ -556,7 +624,9 @@ fixups = {
     'Manassas': collapse_pkgs,
 
     # N
+    'Napoleon at War:Four Battles': nawfb,
     'Neuroshima Hex!': collapse_pkgs,
+    'Next War: Korea': next_war_korea,
     'Normandy, The Beginning of the End': collapse_pkgs,
     'Nothing Gained But Glory': ngbg,
 
@@ -566,6 +636,7 @@ fixups = {
     # P
     'Par le feu, le fer et la Foi': par_le_feu,
     'Paris vaut bien une messe !': paris_vaut,
+    'Pericles: The Peloponnesian Wars': pericles,
     "Prussia's Glory II": prussias_glory_ii,
 
     # Q
@@ -577,13 +648,16 @@ fixups = {
     'Roads to Leningrad: Battles of Soltsy and Staraya Russa, 1941': roads_to_l,
     'Rommel (2017)': no_box_image,
     'Ruse & Bruise': collapse_pkgs,
+    'Russian Front': collapse_pkgs,
 
     # S
     'Small World Underground': collapse_pkgs,
+    'Star Wars: Armada': collapse_pkgs,
 
     # T
     'TablaPeriodica': no_box_image,
     'Thirty Years War Quad': tywq,
+    'This Accursed Civil War': tacw,
     'Three Days of Glory 1805': tdog1805,
     'Triumph & Tragedy': triumph_and_tragedy,
     'Twin Peaks': twin_peaks,
