@@ -436,6 +436,7 @@ version_fixups = {
     '8/8f/Target_Arnhem.vmod': (1, 1, 0, None, None),
     '9/90/Ancients_0_9_1.vmod': (0, 9, 1, None, None),
     '9/90/Dixit_0.7eng_beta.vmod': (0, 7, 0, 'beta', None),
+    '9/91/BloodRoses-Towton_v3.01.vmod': (3, 1, 0, None, None),
     '9/91/Grant_Takes_Command_1.0.vmod': (1, 0, 0, None, None),
     '9/91/LOTR_LCG_Vassal.vmod': (1, 0, 0, None, None),
     '9/91/Raider_16_-_Atlantis.vmod': (1, 0, 1, None, None),
