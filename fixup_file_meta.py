@@ -574,6 +574,7 @@ version_fixups = {
     'c/c0/Kingdom.vmod': (1, 0, 54, None, None),
 #    'c/c0/M3E-Malifaux_Burns-v3c.vmod': (3, 0, 0, eMalifauxBurnsV3c, None),
     'c/c0/MBT-IDF.vmod': (1, 3, 0, None, None),
+    'c/c0/WW-blind.vmod': (1, 0, 0, None, None),
 #    'c/c1/TLD-v0.8b080c-11-7-20.vmod': (0, 8, 0, b080d, None),
     'c/c1/TarotGame.vmod': (1, 0, 0, None, None),
     'c/c1/The_Battle_Of_Moscow.vmod': (1, 0, 0, None, None),
