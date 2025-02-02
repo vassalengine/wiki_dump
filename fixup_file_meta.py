@@ -626,6 +626,7 @@ version_fixups = {
     'c/cf/Axis_and_allies_minis_version_1.0.vmod': (1, 0, 0, None, None),
     'c/cf/Nova.v1.EN.vmod': (1, 1, 0, None, None),
     'c/cf/Omaha_bc._v1_0.vmod': (1, 0, 0, None, None),
+    'd/d0/AV-T_v0.9_Demo.vmod': (0, 9, 0, None, None),
     'd/d1/AtBR_v1a.vmod': (1, 0, 0, 'a', None),
     'd/d1/Tokyo_express_v.099.vmod': (0, 99, 0, None, None),
     'd/d2/Outreach_v1_2.vmod': (1, 2, 0, None, None),
