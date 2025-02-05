@@ -309,6 +309,7 @@ version_fixups = {
     '6/60/BAGSCN_v1.3.vmod': (1, 30, 0, None, None),
     '6/61/BOTB1981_2nd_ver012.vmod': (0, 1, 2, None, None),
     '6/61/Counter-Attack_Arras.vmod': (1, 0, 0, None, None),
+    '6/61/PanzerCommand.vmod': (1, 0, 0, None, None),
     '6/61/TAC_v1.5.vmod': (1, 5, 0, None, None),
     '6/62/Amerika_Bomber_-_Release_10a.vmod': (1, 0, 1, None, None),
     '6/62/DawnPatrol.vmod': (1, 0, 0, None, None),
