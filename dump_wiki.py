@@ -122,7 +122,7 @@ def parse_modules(page):
             for k in
             [
                 'filename',
-                'decription',
+                'description',
                 'date',
                 'size',
                 'compatibility'
