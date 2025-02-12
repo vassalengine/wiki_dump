@@ -77,11 +77,6 @@ def x1914_glorys_end(p):
     use_pkgs(p)
 
 
-def x7_ages(p):
-    del p['modules']['1.01']
-    version_to_release(p)
-
-
 def x8thArmy(p):
     p['modules'] = {
         'Module': {
@@ -608,11 +603,16 @@ def clixers(p):
 
 
 def combat_commander_europe(p):
+    x260 = next(m for m in p['modules']['2.6 (older extensions)'] if m['filename'] == 'CombatCommanderEurope-2.6.vmod')
+    p['modules']['2.6 (older extensions)'].remove(x260)
+
     items = list(p['modules'].items())
     p['modules'] = { 'Module': {} }
     for pn, pv in items:
         ver = next(m['version'] for m in pv if 'version' in m)
         p['modules']['Module'][ver] = pv
+
+    p['modules']['Module']['2.6.0'] = [ x260 ]
 
 
 def combat_vol_2(p):
@@ -5919,7 +5919,7 @@ release_fixups = {
     "1914: Glory's End / When Eagles Fight": x1914_glorys_end,
     "1936: Guerra Civil": version_to_release,
     "1st Alamein": x1stAlamein,
-    "7 Ages": x7_ages,
+    "7 Ages": version_to_release,
     "8th Army: Operation Crusader": x8thArmy,
     "A House Divided": a_house_divided,
     "A Splendid Little War: The 1898 Santiago Campaign": a_splendid_little_war,
