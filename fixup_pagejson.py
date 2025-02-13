@@ -24,12 +24,13 @@ def ok(p):
 def collapse_pkgs(p):
     mods = p['modules']
 
-    # map everything to one package
-    d = []
-    for v in mods.values():
-        d += v
+    if mods:
+        # map everything to one package
+        d = []
+        for v in mods.values():
+            d += v
 
-    p['modules'] = { 'Module': d }
+        p['modules'] = { 'Module': d }
 
 
 def x1stAlamein(p):
@@ -6509,7 +6510,7 @@ def do_fixup_page(path):
     elif release_fixup := release_fixups.get(title):
         release_fixup(p)
 
-    else:
+    elif ms:
         if all(versions.try_semver(pn) for pn in ms):
             mpkg = [ (str(versions.try_semver(pn)), pc) for pn, pc in ms.items() ]
             ms.clear()
