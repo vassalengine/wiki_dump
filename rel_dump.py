@@ -17,14 +17,18 @@ SELECT
     files_w.version,
     files_w.filename
 FROM projects_w
-JOIN packages_w
-JOIN releases_w
-JOIN files_w
-ON projects_w.project_id = packages_w.project_id
-    AND packages_w.package_id = releases_w.package_id
-    AND releases_w.release_id = files_w.release_id
-    AND files_w.filename IS NOT NULL
-    AND files_w.url IS NOT NULL
+LEFT OUTER JOIN packages_w
+    ON projects_w.project_id = packages_w.project_id
+LEFT OUTER JOIN releases_w
+    ON packages_w.package_id = releases_w.package_id
+LEFT OUTER JOIN files_w
+    ON releases_w.release_id = files_w.release_id
+WHERE
+    packages_w.package_id IS NULL
+    OR (
+        files_w.filename IS NOT NULL
+        AND files_w.url IS NOT NULL
+    )
 ORDER BY
     projects_w.game_title ASC,
     packages_w.package_id ASC,
@@ -54,13 +58,16 @@ ORDER BY
 
                 if r[2] != pkg_id:
                     pkg_id = r[2]
-                    print(' ', r[3])
+                    if pkg_id is not None:
+                        print(' ', r[3])
 
                 if r[4] != rel_id:
                     rel_id = r[4]
-                    print('   ', r[5])
-                    
-                print('     ', r[6:])
+                    if rel_id is not None:
+                        print('   ', r[5])
+
+                if pkg_id is not None and rel_id is not None:
+                    print('     ', r[6:])
 
 
 
