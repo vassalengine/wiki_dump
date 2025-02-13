@@ -30,7 +30,7 @@ def collapse_pkgs(p):
         for v in mods.values():
             d += v
 
-        p['modules'] = { 'Module': d }
+        p['modules'] = { 'Module': d } if d else {}
 
 
 def x1stAlamein(p):
