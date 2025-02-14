@@ -94,11 +94,10 @@ CREATE TABLE module_contributors_w (
         cur.execute('''
 CREATE TABLE files_w (
     file_id INTEGER PRIMARY KEY,
-    project_id INTEGER NOT NULL,
-    package_id INTEGER,
+    release_id INTEGER NOT NULL,
     filename TEXT,
     basename TEXT,
-    fileurl TEXT,
+    url TEXT,
     filetype TEXT,
     version_raw TEXT,
     version TEXT,
@@ -111,13 +110,12 @@ CREATE TABLE files_w (
     description TEXT,
     date TEXT,
     size INTEGER,
-    checksum TEXT,
+    sha256 TEXT,
     published_at INTEGER,
     published_by INTEGER,
     compatibility_raw TEXT,
     compatibility TEXT,
-    FOREIGN KEY(project_id) REFERENCES projects_w(project_id),
-    FOREIGN KEY(package_id) REFERENCES packages_w(package_id),
+    FOREIGN KEY(release_id) REFERENCES releases_w(release_id),
     FOREIGN KEY(published_by) REFERENCES users_w(user_id)
 )
         ''')
@@ -181,17 +179,12 @@ CREATE TABLE packages_w (
 CREATE TABLE releases_w (
     release_id INTEGER PRIMARY KEY NOT NULL,
     package_id INTEGER NOT NULL,
-    filename TEXT NOT NULL,
     version TEXT,
     version_major INTEGER,
     version_minor INTEGER,
     version_patch INTEGER,
     version_pre TEXT,
     version_build TEXT,
-    url TEXT,
-    size INTEGER,
-    checksum TEXT,
-    requires TEXT,
     published_at INTEGER,
     published_by INTEGER,
     FOREIGN KEY(package_id) REFERENCES packages_w(package_id),
@@ -295,6 +288,38 @@ def try_extract_version(filename):
 
 def populate_versions(conn, vpath):
     with conn as cur:
+        # fill version parts for releases
+        rows = cur.execute('''
+SELECT release_id, version
+FROM releases_w
+            '''
+        )
+
+        for r in rows:
+            try:
+                v = semver.Version.parse(r[1])
+            except ValueError:
+                continue
+
+            cur.execute('''
+UPDATE releases_w
+SET version_major = ?,
+    version_minor = ?,
+    version_patch = ?,
+    version_pre = ?,
+    version_build = ?
+WHERE release_id = ?
+                ''',
+                (
+                    v.major,
+                    v.minor,
+                    v.patch,
+                    v.prerelease,
+                    v.build,
+                    r[0]
+                )
+            )
+
         # insert version information from reading modulefiles
         with open(vpath, 'r') as f:
             j = json.load(f)
@@ -319,8 +344,8 @@ SET
     version_build = ?,
     semver = 1,
     size = ?,
-    checksum = ?
-WHERE fileurl = ?
+    sha256 = ?
+WHERE url = ?
                         ''',
                         (
                             version,
@@ -341,8 +366,8 @@ WHERE fileurl = ?
 UPDATE files_w
 SET
     size = ?,
-    checksum = ?
-WHERE fileurl = ?
+    sha256 = ?
+WHERE url = ?
                         ''',
                         (
                             size,
@@ -368,41 +393,6 @@ AND INSTR(filename, "8") == 0
 AND INSTR(filename, "9") == 0
             '''
         )
-
-        # try to extract version from filename
-        rows = cur.execute('''
-SELECT file_id, filename
-FROM files_w
-WHERE semver = -1
-AND version_raw IS NULL
-            '''
-        )
-
-        for row in rows:
-            if row[1] is not None:
-                if v := try_extract_version(row[1]):
-                    cur.execute('''
-UPDATE files_w
-SET
-    version = ?,
-    version_major = ?,
-    version_minor = ?,
-    version_patch = ?,
-    version_pre = ?,
-    version_build = ?,
-    semver = 1
-WHERE file_id = ?
-                        ''',
-                        (
-                            str(v),
-                            v.major,
-                            v.minor,
-                            v.patch,
-                            v.prerelease,
-                            v.build,
-                            row[0]
-                        )
-                    )
 
 
 vassal_re = re.compile('vassal|engine', re.I)
@@ -435,7 +425,7 @@ compat_hashes = {
 def populate_compatibility(conn):
     with conn as cur:
         rows = cur.execute('''
-SELECT file_id, compatibility_raw, checksum
+SELECT file_id, compatibility_raw, sha256
 FROM files_w
 WHERE compatibility_raw IS NOT NULL
             '''
@@ -538,8 +528,22 @@ WHERE matched = 1
             '''
         )
 
-# TODO: modified at should be max of all timestamps associated with
-# the project
+        # release publish time is min across all files
+        cur.execute('''
+UPDATE releases_w
+SET published_at = pub.published_at, published_by = pub.published_by
+FROM (
+    SELECT
+        files_w.release_id,
+        MIN(files_w.published_at) as published_at,
+        files_w.published_by
+    FROM files_w
+    GROUP BY files_w.release_id
+) AS pub
+WHERE pub.release_id = releases_w.release_id
+            '''
+        )
+
         cur.execute('''
 INSERT INTO projects (
     project_id,
@@ -606,45 +610,6 @@ WHERE users_w.matched = 1
         )
 
         cur.execute('''
-INSERT INTO releases_w (
-    package_id,
-    version,
-    version_major,
-    version_minor,
-    version_patch,
-    version_pre,
-    version_build,
-    url,
-    filename,
-    size,
-    checksum,
-    requires,
-    published_at,
-    published_by
-)
-SELECT
-    package_id,
-    version,
-    version_major,
-    version_minor,
-    version_patch,
-    COALESCE(files_w.version_pre, ""),
-    COALESCE(files_w.version_build, ""),
-    fileurl,
-    filename,
-    size,
-    checksum,
-    compatibility,
-    published_at,
-    published_by
-FROM files_w
-WHERE filename IS NOT NULL
-    AND package_id IS NOT NULL
-    AND filetype = "vmod"
-            '''
-        )
-
-        cur.execute('''
 INSERT OR IGNORE INTO packages (
     package_id,
     project_id,
@@ -656,11 +621,11 @@ SELECT
     packages_w.package_id,
     packages_w.project_id,
     packages_w.name,
-	MIN(files_w.published_at),
-	files_w.published_by
+	MIN(releases_w.published_at),
+	releases_w.published_by
 FROM packages_w
-JOIN files_w
-ON packages_w.package_id = files_w.package_id
+JOIN releases_w
+ON packages_w.package_id = releases_w.package_id
 GROUP BY packages_w.package_id
             '''
         )
@@ -675,70 +640,49 @@ INSERT OR IGNORE INTO releases (
     version_patch,
     version_pre,
     version_build,
+    published_at,
+    published_by
+)
+SELECT
+    releases_w.release_id,
+    releases_w.package_id,
+    releases_w.version,
+    releases_w.version_major,
+    releases_w.version_minor,
+    releases_w.version_patch,
+    COALESCE(releases_w.version_pre, ""),
+    COALESCE(releases_w.version_build, ""),
+    releases_w.published_at,
+    releases_w.published_by
+FROM releases_w
+            '''
+        )
+
+# SELECT files_w.*, releases_w.* FROM files_w JOIN releases_w ON files_w.package_id = releases_w.package_id AND files_w.version = releases_w.version;
+
+        cur.execute('''
+INSERT OR IGNORE INTO files (
+    file_id,
+    release_id,
     url,
     filename,
     size,
-    checksum,
+    sha256,
     requires,
     published_at,
     published_by
 )
 SELECT
+    file_id,
     release_id,
-    package_id,
-    COALESCE(version, "0.0.0"),
-    COALESCE(version_major, 0),
-    COALESCE(version_minor, 0),
-    COALESCE(version_patch, 0),
-    version_pre,
-    version_build,
     url,
     filename,
     size,
-    checksum,
-    COALESCE(requires, ""),
-    published_at,
-    published_by
-FROM releases_w
-            '''
-        )
-
-        cur.execute('''
-INSERT OR IGNORE INTO files (
-    file_id,
-    package_id,
-    version,
-    version_major,
-    version_minor,
-    version_patch,
-    version_pre,
-    version_build,
-    url,
-    filename,
-    size,
-    checksum,
-    published_at,
-    published_by
-)
-SELECT
-    file_id,
-    package_id,
-    COALESCE(version, "0.0.0"),
-    COALESCE(version_major, 0),
-    COALESCE(version_minor, 0),
-    COALESCE(version_patch, 0),
-    COALESCE(version_pre, ""),
-    COALESCE(version_build, ""),
-    fileurl,
-    filename,
-    size,
-    checksum,
+    sha256,
+    compatibility,
     published_at,
     published_by
 FROM files_w
-WHERE filename IS NOT NULL
-    AND package_id IS NOT NULL
-    AND filetype != "vmod"
             '''
         )
 
@@ -840,15 +784,23 @@ WHERE projects.project_id = x.project_id
             '''
         )
 
+        # project modified time is the max of all timestamps associated with
+        # the project
         cur.execute('''
 UPDATE projects
 SET modified_at = x.published_at
 FROM (
-    SELECT MAX(releases.published_at) AS published_at, packages.project_id
-    FROM releases
-    JOIN packages
-    ON packages.package_id = releases.package_id
-    GROUP BY packages.project_id
+    SELECT project_id, MAX(published_at) as published_at
+    FROM (
+        SELECT packages.project_id, releases.published_at
+        FROM releases
+        JOIN packages
+        ON packages.package_id = releases.package_id
+        UNION
+        SELECT images.project_id, images.published_at
+        FROM images
+    )
+    GROUP BY project_id
 ) AS x
 WHERE projects.project_id = x.project_id
             '''
@@ -943,6 +895,17 @@ def add_or_get_package(conn, proj_id, pkg):
         return r[0]
 
     c.execute("INSERT INTO packages_w (project_id, name) VALUES(?, ?) RETURNING package_id", (proj_id, pkg))
+    return c.fetchone()[0]
+
+
+def add_or_get_release(conn, pkg_id, ver):
+    c = conn.cursor()
+
+    c.execute("SELECT release_id FROM releases_w WHERE package_id = ? AND version = ?", (pkg_id, ver))
+    if r := c.fetchone():
+        return r[0]
+
+    c.execute("INSERT INTO releases_w (package_id, version) VALUES(?, ?) RETURNING release_id", (pkg_id, ver))
     return c.fetchone()[0]
 
 
@@ -1236,6 +1199,67 @@ def parse_length_tag(ltag):
     return lval, rval
 
 
+
+def process_file_entry(file, release_id, file_meta, file_ctimes, conn):
+    frec = {
+        'release_id': release_id,
+        'semver': -1
+    }
+
+    fmaints = file['maintainers']
+    fcontribs = file['contributors']
+    fpub = None
+
+    if d := file.get('date'):
+        frec['date'] = parse_date(d)
+
+    for k, v in file.items():
+        if v and k not in ('date', 'maintainers', 'contributors', 'size'):
+            frec[k] = v
+
+    if version := frec.pop('version', None):
+        frec['version_raw'] = version
+
+    if vp := frec.pop('version_parsed', None):
+        frec['version_major'] = vp[0]
+        frec['version_minor'] = vp[1]
+        frec['version_patch'] = vp[2]
+        frec['version_pre'] = vp[3]
+        frec['version_build'] = vp[4]
+
+    if compat := frec.pop('compatibility', None):
+        frec['compatibility_raw'] = compat
+
+    if filename := frec.get('filename'):
+        ext = os.path.splitext(filename)[1]
+
+        if ext:
+            # strip the dot and lowercase
+            ext = ext[1:].lower()
+            frec['filetype'] = ext
+
+        if url := get_url(filename, file_meta):
+            frec['url'] = url
+
+        if ctime := file_ctimes.get(ctime_key(filename)):
+            frec['published_at'] = ctime
+
+        fpub = get_publisher(filename, file_meta)
+
+    if fpub:
+        frec['published_by'] = add_or_get_user(conn, (None, fpub))
+
+    fid = do_insert(conn, 'files_w', 'file_id', frec)
+
+    for e in fmaints:
+        do_insert_users(conn, 'file_maintainers_w', 'file_id', e, fid)
+
+    for e in fcontribs:
+        do_insert_users(conn, 'file_contributors_w', 'file_id', e, fid)
+
+    return fpub, fmaints, fcontribs
+
+
 def process_json(conn, file_meta, file_ctimes, filename, num):
     print(num)
 
@@ -1362,78 +1386,21 @@ def process_json(conn, file_meta, file_ctimes, filename, num):
     possible_contribs = []
     file_publishers = []
 
-    for sec, mods in p.get('modules', {}).items():
-        for mod in mods:
-            frec = {
-                'project_id': num,
-                'semver': -1
-            }
+    # process modules section
+    for pkg, rels in p.get('modules', {}).items():
+        pkg_id = add_or_get_package(conn, num, pkg)
 
-            fmaints = mod['maintainers']
-            fcontribs = mod['contributors']
-            fpub = None
-            pkg = None
+        for rel, files in rels.items():
+            rel_id = add_or_get_release(conn, pkg_id, rel)
 
-            if d := mod.get('date'):
-                frec['date'] = parse_date(d)
+            for file in files:
+                fpub, fmaints, fcontribs =  process_file_entry(file, rel_id, file_meta, file_ctimes, conn)
 
-            for k, v in mod.items():
-                if v and k not in ('date', 'maintainers', 'contributors', 'size'):
-                    frec[k] = v
+                if fpub:
+                    file_publishers.append((None, fpub))
 
-            if version := frec.get('version'):
-                frec['version_raw'] = version
-                del frec['version']
-            elif sec:
-                frec['version_raw'] = version
-
-            if compat := frec.get('compatibility'):
-                frec['compatibility_raw'] = compat
-                del frec['compatibility']
-            elif sec:
-                frec['compatibility_raw'] = compat
-
-            if filename := frec.get('filename'):
-                ext = os.path.splitext(filename)[1]
-
-                if ext:
-                    # strip the dot and lowercase
-                    ext = ext[1:].lower()
-                    frec['filetype'] = ext
-
-                    if ext == 'vmod':
-                        pkg = sec or 'Module'
-                    else:
-                        pkg = 'Files'
-                else:
-                    pkg = 'Files'
-
-                if url := get_url(filename, file_meta):
-                    frec['fileurl'] = url
-
-                if ctime := file_ctimes.get(ctime_key(filename)):
-                    frec['published_at'] = ctime
-
-                fpub = get_publisher(filename, file_meta)
-
-            if pkg:
-                pkg_id = add_or_get_package(conn, num, pkg)
-                frec['package_id'] = pkg_id
-
-            if fpub:
-                frec['published_by'] = add_or_get_user(conn, (None, fpub))
-                file_publishers.append((None, fpub))
-
-            fid = do_insert(conn, 'files_w', 'file_id', frec)
-
-            for e in fmaints:
-                do_insert_users(conn, 'file_maintainers_w', 'file_id', e, fid)
-
-            for e in fcontribs:
-                do_insert_users(conn, 'file_contributors_w', 'file_id', e, fid)
-
-            possible_owners += fmaints
-            possible_contribs += fcontribs
+                possible_owners += fmaints
+                possible_contribs += fcontribs
 
     for e in players:
         do_insert_users(conn, 'players_w', 'project_id', e, num)
