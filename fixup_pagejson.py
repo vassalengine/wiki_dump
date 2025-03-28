@@ -900,7 +900,7 @@ def feudal(p):
 
 
 def first_victories(p):
-    p['modules']['Rolica'] = p['modules'].pop('2.0 Rolica')
+    p['modules']['Rolica'] = p['modules'].pop('2.1 Rolica')
     p['modules']['Vimero'] = p['modules'].pop('2.0 Vimero')
     use_pkgs(p)
 
