@@ -1099,13 +1099,20 @@ def parse_screenshot_image(filename, file_meta, file_ctimes):
 
 
 def title_sort_key(title):
-    # TODO: Figure out what to do with Die, Der, Das, L', La, Le, Les, Una
+    # Lowercase everything
+    title = title.lower()
 
-    if title.startswith('A la'):
+    # Strip accents
+    title = remove_accents(title)
+
+    # Articles go to end of sort key
+
+    # TODO: Figure out what to do with Die, Der, Das, L', La, Le, Les, Una
+    if title.startswith('a la'):
         # Spanish: A is not an article
         return title
 
-    for art in ('The', 'A', 'An'):
+    for art in ('the', 'a', 'an'):
         if title.startswith(art + ' '):
             return title[len(art) + 1:] + ', ' + art
 
