@@ -873,6 +873,15 @@ def enemy_action_kharkov(p):
     use_pkgs(p)
 
 
+def europa_full_map(p):
+    scen = next(m for pn, pv in p['modules'].items() for m in pv if m['filename'] == 'scenarios.zip')
+
+    p['modules'] = {
+        'Module': { m['version'] : [ m ] for pn, pv in p['modules'].items() for m in pv if m['filename'].endswith('.vmod') }
+    }
+    p['modules']['Module']['0.88.0'].append(scen)
+
+
 def exile_sun(p):
     p['modules'] = {
         'Module': {
@@ -2391,6 +2400,15 @@ def the_other_side(p):
     p['modules'] = {
         'Beyond the Other Side': { m['version']: [ m ] for pn, pv in p['modules'].items() for m in pv if 'Beyond' in pn },
         'The Other Side': { m['version']: [ m ] for pn, pv in p['modules'].items() for m in pv if 'Beyond' not in pn }
+    }
+
+
+def the_sword_and_the_stars(p):
+    p['modules'] = {
+        'Module': { m['version']: [ m ] for pn, pv in p['modules'].items() for m in pv if 'version' in m },
+        'Misc': {
+            '0.0.0': [ m for pn, pv in p['modules'].items() for m in pv if 'version' not in m ]
+        }
     }
 
 
@@ -5556,7 +5574,7 @@ collapses = {
     "The Succession Wars": None,
     "The Sun of Austerlitz": collapse_pkgs,
     "The Supreme Commander": collapse_pkgs,
-    "The Sword and the Stars": collapse_pkgs,
+    "The Sword and the Stars": None,
     "The Third Winter: The Battle for the Ukraine September 1943-April 1944": collapse_pkgs,
     "The Third World War": None,
     "The Third World War: Designer Signature Edition": collapse_pkgs,
@@ -6083,7 +6101,7 @@ release_fixups = {
     "En Pointe Toujours!": version_to_release,
     "Enemy Action: Kharkov": enemy_action_kharkov,
     "Epées et Hallebardes 1315-1476": version_to_release,
-    "Europa Full Map": version_to_release,
+    "Europa Full Map": europa_full_map,
     "Exile Sun": exile_sun,
     "Fall Blau: Army Group South, June-December 1942": fall_blau_ags,
     "Fatal Alliances III Dreadnoughts in Flames": version_to_release,
@@ -6352,6 +6370,7 @@ release_fixups = {
     "The Return of the Stainless Steel Rat": version_to_release,
     "The Siege of Barad-Dur 3430": version_to_release,
     "The Siege of Jerusalem": version_to_release,
+    "The Sword and the Stars": the_sword_and_the_stars,
     "The Three Days of Gettysburg (third edition)": version_to_release,
     "The Warlord Game": version_to_release,
     "Thirty Years War Quad": version_to_release,
