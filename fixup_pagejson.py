@@ -2195,6 +2195,14 @@ def sweden_fights_on(p):
     }
 
 
+def tactics_25(p):
+    p['modules'] = {
+        'Module': {
+            '1.0.0': p['modules'].pop('Module')
+        }
+    }
+
+
 def tannenberg_1914(p):
     p['modules'] = {
         'Module': { m['version']: [ m ] for pn, pv in p['modules'].items() for m in pv if 'version' in m },
@@ -2236,6 +2244,14 @@ def tenkatoitsu(p):
     for m in ms:
         r = p['modules']['Module'].setdefault(m['version'], [])
         r.append(m)
+
+
+def tet_offensive(p):
+    p['modules'] = {
+        'Module': {
+            '1.0.0': p['modules'].pop('Module')
+        }
+    }
 
 
 def the_alamo_victory_in_death(p):
@@ -6288,12 +6304,14 @@ release_fixups = {
     "Sweden Fights On": sweden_fights_on,
     "Switchboard": version_to_release,
     "Tactics": version_to_release,
+    "Tactics (25th Anniversary Edition)": tactics_25,
     "Tannenberg 1914 (1990)": tannenberg_1914,
     "Target Arnhem, Across Six Bridges": target_arnhem,
     "Tarot, Tarock & Tarocchi Games": tarot,
     "Tatchanka: Ukraine, 1919-21": version_to_release,
     "Tenkatoitsu": tenkatoitsu,
     "Tennis": version_to_release,
+    "Tet Offensive": tet_offensive,
     "The Alamo: Victory in Death": the_alamo_victory_in_death,
     "The Art of Siege": use_pkgs,
     "The Balkan Wars: Prelude to Disaster, 1912-1913": the_balkan_wars,
