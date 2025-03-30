@@ -171,6 +171,14 @@ def arkwright(p):
     }
 
 
+def arrakhars_wand(p):
+    p['modules'] = {
+        'Module': {
+            '1.0.0': p['modules'].pop('Module')
+        }
+    }
+
+
 def arquebus(p):
     ms = [ m for pn, pv in p['modules'].items() for m in pv ]
     p['modules'] = { 'Module': {} }
@@ -5937,6 +5945,7 @@ release_fixups = {
     "Annihilator / OneWorld": annihilator,
     "Ardennes '44": ardennes_44,
     "Arkwright": arkwright,
+    "Arrakhar's Wand": arrakhars_wand,
     "Arquebus: Men of Iron Volume IV": arquebus,
     "Assault on Hoth: The Empire Strikes Back": assault_on_hoth,
     "Assault on Mt Everest": version_to_release,
