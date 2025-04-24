@@ -867,9 +867,9 @@ def elfball(p):
 
 
 def enemy_action_kharkov(p):
-    p['modules']['2-Player'] = p['modules'].pop('2-Player 1.31')
+    p['modules']['2-Player'] = p['modules'].pop('2-Player 1.32')
     p['modules']['German Solo'] = p['modules'].pop('German Solo 1.6')
-    p['modules']['Soviet Solo'] = p['modules'].pop('Soviet Solo 1.2')
+    p['modules']['Soviet Solo'] = p['modules'].pop('Soviet Solo 1.5')
     use_pkgs(p)
 
 
