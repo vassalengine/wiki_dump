@@ -6482,7 +6482,7 @@ fixups = {
     "Kingmaker": None,
     "L'Art de la Guerre": None,
     "Marine Fighter Squadron: A Solitaire Game of Aerial Combat in the Solomons (1942-1945)": None,
-    "MechWar 'Gloomhaven_Scenarios_4P_3.1.vmdx77: Tactical Armored Combat in the 1970's": None,
+    "MechWar '77: Tactical Armored Combat in the 1970's": None,
     "Napoleon at Waterloo": None,
     "NFL Strategy": None,
     "No Retreat!": None,
