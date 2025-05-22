@@ -11,33 +11,41 @@ def run():
         'Api-Username': 'system'
     }
 
-    users = []
-
     s = requests.Session()
     retries = requests.adapters.Retry(total=5, backoff_factor=1)
     s.mount('https://', requests.adapters.HTTPAdapter(max_retries=retries))
 
-    page = 1
-    while True:
-        params = {
-            'page': page,
-            'show_emails': 'true'
-        }
-        response = s.get(url, params=params, headers=headers)
-        r = response.json()
-
-        if not r:
-            break
-
-        users += r
-
-        print(page)
-        page += 1
-    
-        
     with open('data/users.json', 'w') as f:
-        json.dump(users, f, indent=2)
+        print('[', file=f)
 
+        first = True
+
+        page = 1
+        while True:
+            params = {
+                'page': page,
+                'show_emails': 'true'
+            }
+            response = s.get(url, params=params, headers=headers)
+            response.raise_for_status()
+
+            r = response.json()
+
+            if not r['users']:
+                break
+
+            for u in r['users']:
+                if first:
+                    first = False
+                else:
+                    print(',', file=f)
+
+                json.dump(u, f)
+
+            print(page)
+            page += 1
+
+        print(']', file=f)
 
 if __name__ == '__main__':
     run()
