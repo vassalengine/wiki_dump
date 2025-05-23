@@ -843,7 +843,8 @@ def dragon_pass(p):
 def dune_wfa(p):
     p['modules'] = {
         'Module': {
-            '1.1.0': p['modules'].pop('1.01')
+            '1.1.0': p['modules'].pop('1.01'),
+            '2.0.0': p['modules'].pop('2.0')
         },
         "Scripted Setup": { m['version'] : [ m ] for pn, pv in p['modules'].items() for m in pv if 'Scripted' in pn }
     }
@@ -874,12 +875,14 @@ def enemy_action_kharkov(p):
 
 
 def europa_full_map(p):
-    scen = next(m for pn, pv in p['modules'].items() for m in pv if m['filename'] == 'scenarios.zip')
+    scen88 = next(m for pn, pv in p['modules'].items() for m in pv if m['filename'] == 'scenarios.zip')
+    scen90 = [ m for pn, pv in p['modules'].items() for m in pv if not m['filename'].endswith('.vmod') and m['filename'] != 'scenarios.zip' ]
 
     p['modules'] = {
         'Module': { m['version'] : [ m ] for pn, pv in p['modules'].items() for m in pv if m['filename'].endswith('.vmod') }
     }
-    p['modules']['Module']['0.88.0'].append(scen)
+    p['modules']['Module']['0.88.0'].append(scen88)
+    p['modules']['Module']['0.90.0'] += scen90
 
 
 def exile_sun(p):
